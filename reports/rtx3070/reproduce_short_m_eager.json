@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-09-23T21:00:12.889980+00:00",
+  "preflight": {
+    "checked": true,
+    "error": "GPU is not idle: utilization.gpu = 23% (want < 3%)"
+  },
+  "publishable": false,
+  "hypotheses": [
+    "H4",
+    "H5",
+    "H6"
+  ],
+  "rows": [
+    {
+      "m": 16,
+      "graph": false,
+      "error": 0.125,
+      "relation_to_1": "contains",
+      "vs_matmul": {
+        "pairs": 21,
+        "a_median_ms": 0.1005,
+        "b_median_ms": 0.1057,
+        "speedup_median": 0.9529,
+        "speedup_ci95": [
+          0.7264,
+          1.0884
+        ],
+        "significant": false,
+        "unstable": true,
+        "graph_captured": false
+      }
+    },
+    {
+      "m": 32,
+      "graph": false,
+      "error": 0.0,
+      "relation_to_1": "below",
+      "vs_matmul": {
+        "pairs": 21,
+        "a_median_ms": 0.1137,
+        "b_median_ms": 0.1385,
+        "speedup_median": 0.7834,
+        "speedup_ci95": [
+          0.5996,
+          0.8458
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": false
+      }
+    },
+    {
+      "m": 64,
+      "graph": false,
+      "error": 0.0,
+      "relation_to_1": "below",
+      "vs_matmul": {
+        "pairs": 21,
+        "a_median_ms": 0.0906,
+        "b_median_ms": 0.1318,
+        "speedup_median": 0.682,
+        "speedup_ci95": [
+          0.491,
+          0.8809
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": false
+      }
+    }
+  ]
+}

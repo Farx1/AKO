@@ -1,0 +1,21 @@
+FROM nvidia/cuda:12.4.1-devel-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y \
+    python3 python3-pip python3-dev git build-essential ninja-build \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --upgrade pip
+
+WORKDIR /workspace
+
+COPY pyproject.toml README.md ./
+COPY ako ./ako
+COPY tests ./tests
+COPY scripts ./scripts
+
+RUN pip3 install -e ".[all]"
+
+CMD ["python3", "-m", "pytest", "-q", "-m", "not gpu"]

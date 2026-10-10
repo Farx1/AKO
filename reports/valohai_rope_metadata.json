@@ -1,0 +1,29 @@
+{
+  "framework": "ako",
+  "step": "benchmark-rope",
+  "operation": "rope",
+  "timestamp": "2026-07-02T15:16:40.266208+00:00",
+  "parameters": {
+    "batches": [
+      2
+    ],
+    "seq_lens": [
+      128
+    ],
+    "num_heads": [
+      32
+    ],
+    "head_dims": [
+      128
+    ],
+    "dtypes": [
+      "torch.float32"
+    ]
+  },
+  "summary": {
+    "gpu": "cpu (amd_gpu=Advanced Micro Devices, Inc. [AMD/ATI] Device 1114 (rev c3))",
+    "num_comparisons": 0,
+    "best_speedup": null
+  },
+  "report_ref": "benchmark_report.json"
+}

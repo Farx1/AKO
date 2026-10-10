@@ -1,0 +1,142 @@
+{
+  "created_at": "2026-08-14T09:32:01.861006+00:00",
+  "device": {
+    "device_type": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+    "device_index": 0,
+    "cuda_capability": [
+      8,
+      6
+    ],
+    "total_memory_gb": 8.0,
+    "driver_version": "581.83",
+    "gpu_vendor": "nvidia",
+    "compute_backend": "cuda",
+    "sm_count": 40,
+    "smem_per_block": null,
+    "l2_bytes": 4194304,
+    "regs_per_sm": 65536
+  },
+  "model": {
+    "hidden_dim": 1024,
+    "n_layers": 4,
+    "n_heads": 16,
+    "n_kv_heads": 4,
+    "intermediate_dim": 2816,
+    "max_seq_len": 1088,
+    "rope_base": 10000.0,
+    "rope_style": "neox",
+    "eps": 1e-05
+  },
+  "preset": "small",
+  "trace": {
+    "requests": 64,
+    "batches": 8,
+    "max_batch": 8,
+    "median_prompt": 256,
+    "median_decode": 64,
+    "max_prompt": 1024,
+    "spread": 1.0,
+    "seed": 0,
+    "prompt_len_min": 31,
+    "prompt_len_max": 1024
+  },
+  "dtype": "float16",
+  "policies": {
+    "eager": {
+      "policy": "eager",
+      "total_ms": 26054.531,
+      "batches": 8,
+      "prefill_ms_total": 811.534,
+      "decode_ms_total": 25242.997,
+      "cumulative_ms": [
+        7831.959,
+        9552.366,
+        11077.889,
+        16781.308,
+        19529.161,
+        20645.525,
+        21961.085,
+        26054.531
+      ],
+      "ttft_p50_ms": 53.9974,
+      "ttft_p95_ms": 484.5886,
+      "batch_p50_ms": 2747.8528,
+      "batch_p95_ms": 7831.9594
+    },
+    "compile": {
+      "policy": "compile",
+      "total_ms": 55236.711,
+      "batches": 8,
+      "prefill_ms_total": 15993.571,
+      "decode_ms_total": 39243.14,
+      "cumulative_ms": [
+        38745.891,
+        40414.789,
+        41664.408,
+        46488.678,
+        49419.239,
+        50685.838,
+        52054.365,
+        55236.711
+      ],
+      "ttft_p50_ms": 35.1568,
+      "ttft_p95_ms": 15583.8461,
+      "batch_p50_ms": 2930.5615,
+      "batch_p95_ms": 38745.8913
+    },
+    "triton": {
+      "policy": "triton",
+      "total_ms": 30344.832,
+      "batches": 8,
+      "prefill_ms_total": 5154.085,
+      "decode_ms_total": 25190.746,
+      "cumulative_ms": [
+        11386.561,
+        14054.84,
+        16623.362,
+        21917.947,
+        24422.528,
+        25377.146,
+        26850.424,
+        30344.832
+      ],
+      "ttft_p50_ms": 137.7337,
+      "ttft_p95_ms": 4308.3451,
+      "batch_p50_ms": 2668.2788,
+      "batch_p95_ms": 11386.5611
+    },
+    "adaptive": {
+      "policy": "adaptive",
+      "total_ms": 28613.457,
+      "batches": 8,
+      "prefill_ms_total": 5143.343,
+      "decode_ms_total": 23470.114,
+      "cumulative_ms": [
+        10746.09,
+        13084.126,
+        14788.904,
+        19972.562,
+        22880.837,
+        23868.242,
+        25385.016,
+        28613.457
+      ],
+      "ttft_p50_ms": 329.2339,
+      "ttft_p95_ms": 3092.6689,
+      "batch_p50_ms": 2908.2749,
+      "batch_p95_ms": 10746.0904
+    }
+  },
+  "crossover_batch": {
+    "eager": null,
+    "compile": 0,
+    "triton": 0
+  },
+  "kernel_cache": {
+    "hits": 6,
+    "misses": 30,
+    "lookups": 36,
+    "hit_rate": 0.1667
+  }
+}

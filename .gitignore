@@ -1,0 +1,29 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.so
+
+.venv/
+venv/
+env/
+
+# Local/ephemeral benchmark dumps
+reports/*
+*.json
+# Published hardware results (committed intentionally)
+!reports/rtx3070/
+!reports/rtx3070/**
+
+
+.ako/
+.idea/
+.vscode/
+*.swp
+
+.DS_Store

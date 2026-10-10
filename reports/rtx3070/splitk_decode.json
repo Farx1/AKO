@@ -1,0 +1,288 @@
+{
+  "created_at": "2026-09-23T20:00:40.493559+00:00",
+  "device": "NVIDIA GeForce RTX 3070 Laptop GPU",
+  "sm_count": 40,
+  "preflight": {
+    "checked": true,
+    "error": "GPU is not idle: utilization.gpu = 15% (want < 3%)"
+  },
+  "publishable": false,
+  "note": "Decode rows: speedup is matmul/splitk under a CUDA graph, >1 means split-K is faster. skinny_silu_ratio_cv is the variation of that paired ratio, not of the absolute times. It does not override the M1 stop on absolute rankings.",
+  "decode_splitk": [
+    {
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 128,
+        "BLOCK_K": 64,
+        "SPLIT_K": 1
+      },
+      "error": 0.0,
+      "vs_matmul_graph": {
+        "pairs": 5,
+        "a_median_ms": 0.17,
+        "b_median_ms": 0.1781,
+        "speedup_median": 1.0342,
+        "speedup_ci95": [
+          0.7658,
+          1.3667
+        ],
+        "significant": false,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 64,
+        "BLOCK_K": 64,
+        "SPLIT_K": 1
+      },
+      "error": 0.0,
+      "vs_matmul_graph": {
+        "pairs": 5,
+        "a_median_ms": 0.1863,
+        "b_median_ms": 0.1566,
+        "speedup_median": 1.2333,
+        "speedup_ci95": [
+          0.4661,
+          2.1362
+        ],
+        "significant": false,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 256,
+        "BLOCK_K": 32,
+        "SPLIT_K": 1
+      },
+      "error": 0.0,
+      "vs_matmul_graph": {
+        "pairs": 5,
+        "a_median_ms": 0.421,
+        "b_median_ms": 0.6116,
+        "speedup_median": 0.7887,
+        "speedup_ci95": [
+          0.5283,
+          0.9408
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 128,
+        "BLOCK_K": 64,
+        "SPLIT_K": 2
+      },
+      "error": 0.125,
+      "vs_matmul_graph": {
+        "pairs": 5,
+        "a_median_ms": 2.0858,
+        "b_median_ms": 2.242,
+        "speedup_median": 0.9864,
+        "speedup_ci95": [
+          0.7265,
+          1.0803
+        ],
+        "significant": false,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 64,
+        "BLOCK_K": 64,
+        "SPLIT_K": 2
+      },
+      "error": 0.125,
+      "vs_matmul_graph": {
+        "pairs": 5,
+        "a_median_ms": 0.4302,
+        "b_median_ms": 0.4015,
+        "speedup_median": 0.8966,
+        "speedup_ci95": [
+          0.1798,
+          1.7354
+        ],
+        "significant": false,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 256,
+        "BLOCK_K": 32,
+        "SPLIT_K": 2
+      },
+      "error": 0.125,
+      "vs_matmul_graph": {
+        "pairs": 5,
+        "a_median_ms": 2.1233,
+        "b_median_ms": 2.3232,
+        "speedup_median": 0.7086,
+        "speedup_ci95": [
+          0.2552,
+          0.9907
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 128,
+        "BLOCK_K": 64,
+        "SPLIT_K": 4
+      },
+      "error": 0.125,
+      "vs_matmul_graph": {
+        "pairs": 5,
+        "a_median_ms": 0.2185,
+        "b_median_ms": 0.3718,
+        "speedup_median": 0.6218,
+        "speedup_ci95": [
+          0.4509,
+          0.826
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 64,
+        "BLOCK_K": 64,
+        "SPLIT_K": 4
+      },
+      "error": 0.125,
+      "vs_matmul_graph": {
+        "pairs": 5,
+        "a_median_ms": 0.4057,
+        "b_median_ms": 0.4686,
+        "speedup_median": 0.8055,
+        "speedup_ci95": [
+          0.7506,
+          1.015
+        ],
+        "significant": false,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 256,
+        "BLOCK_K": 32,
+        "SPLIT_K": 4
+      },
+      "error": 0.125,
+      "vs_matmul_graph": {
+        "pairs": 5,
+        "a_median_ms": 0.1215,
+        "b_median_ms": 0.2636,
+        "speedup_median": 0.6068,
+        "speedup_ci95": [
+          0.3689,
+          0.8632
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 128,
+        "BLOCK_K": 64,
+        "SPLIT_K": 8
+      },
+      "error": 0.125,
+      "vs_matmul_graph": {
+        "pairs": 5,
+        "a_median_ms": 0.1698,
+        "b_median_ms": 0.2969,
+        "speedup_median": 0.5147,
+        "speedup_ci95": [
+          0.4347,
+          0.6251
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 64,
+        "BLOCK_K": 64,
+        "SPLIT_K": 8
+      },
+      "error": 0.125,
+      "vs_matmul_graph": {
+        "pairs": 5,
+        "a_median_ms": 0.1168,
+        "b_median_ms": 0.2291,
+        "speedup_median": 0.5288,
+        "speedup_ci95": [
+          0.4009,
+          0.5702
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 256,
+        "BLOCK_K": 32,
+        "SPLIT_K": 8
+      },
+      "error": 0.125,
+      "vs_matmul_graph": {
+        "pairs": 5,
+        "a_median_ms": 0.2315,
+        "b_median_ms": 0.4623,
+        "speedup_median": 0.5791,
+        "speedup_ci95": [
+          0.4983,
+          0.9358
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    }
+  ],
+  "skinny_silu_graph_ratio": {
+    "pairs": 15,
+    "speedup_median": 1.4459,
+    "speedup_ci95": [
+      1.3601,
+      1.5369
+    ],
+    "ratio_cv": 0.1532,
+    "significant": true,
+    "graph_captured": true
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "gpu": "NVIDIA GeForce RTX 3070 Laptop GPU",
+  "compute_backend": "cuda",
+  "device": {
+    "device_type": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+    "device_index": 0,
+    "cuda_capability": [
+      8,
+      6
+    ],
+    "total_memory_gb": 8.0,
+    "driver_version": "8.6",
+    "gpu_vendor": "nvidia",
+    "compute_backend": "cuda"
+  },
+  "created_at": "2026-08-12T20:14:03.965817+00:00",
+  "parameters": {
+    "batch_size": 4,
+    "seq_len": 1024,
+    "hidden_dim": 2048,
+    "num_heads": 16,
+    "head_dim": 128,
+    "dtype": "bf16",
+    "rope_style": "neox"
+  },
+  "operations": {
+    "rmsnorm": {
+      "operation": "rmsnorm",
+      "selected_kernel": "rmsnorm_triton",
+      "backend": "triton",
+      "shape_key": "(4, 1024, 2048)_bfloat16_(2048,)",
+      "source": "benchmark",
+      "from_cache": false,
+      "latency_p50_ms": 0.22926466666225073,
+      "baseline_ms": 1.0597519999464566,
+      "speedup": 4.622,
+      "max_error": 0.0078125,
+      "candidates_evaluated": 4,
+      "rejected": []
+    },
+    "rmsnorm_residual": {
+      "operation": "rmsnorm_residual",
+      "selected_kernel": "rmsnorm_residual_triton",
+      "backend": "triton",
+      "shape_key": "(4, 1024, 2048)_bfloat16_(4, 1024, 2048)_(2048,)",
+      "source": "benchmark",
+      "from_cache": false,
+      "latency_p50_ms": 0.28005949999965196,
+      "baseline_ms": 1.1980559999642537,
+      "speedup": 4.278,
+      "max_error": 0.0,
+      "candidates_evaluated": 3,
+      "rejected": []
+    },
+    "rope": {
+      "operation": "rope",
+      "selected_kernel": "rope_triton",
+      "backend": "triton",
+      "shape_key": "(4, 1024, 16, 128)_bfloat16_(1024, 64)_(1024, 64)_neox",
+      "source": "benchmark",
+      "from_cache": false,
+      "latency_p50_ms": 0.1601146666606231,
+      "baseline_ms": 1.3530279999827144,
+      "speedup": 8.45,
+      "max_error": 0.015625,
+      "candidates_evaluated": 3,
+      "rejected": []
+    }
+  },
+  "cache": {
+    "path": "~/.ako/kernel_cache.json",
+    "hits": 0,
+    "misses": 3,
+    "lookups": 3,
+    "hit_rate": 0.0
+  }
+}

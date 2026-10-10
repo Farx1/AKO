@@ -1,0 +1,111 @@
+{
+  "created_at": "2026-09-23T19:24:08.349751+00:00",
+  "device": "NVIDIA GeForce RTX 3070 Laptop GPU",
+  "sm_count": 40,
+  "preflight": {
+    "checked": true,
+    "error": "GPU is not idle: utilization.gpu = 24% (want < 3%)"
+  },
+  "publishable": false,
+  "note": "speedup_median is addmm_then_act/fused. >1 means fused is faster. skinny_k should keep its lead under a CUDA graph (the gain is traffic). decode should lose that lead under a graph (the gain is launch overhead). Absolute milliseconds are not quotable when unstable or the card is busy.",
+  "cells": [
+    {
+      "cell": "skinny_k",
+      "problem": {
+        "op": "matmul_bias_act",
+        "m": 4096,
+        "n": 4096,
+        "k": 64,
+        "dtype": "fp16",
+        "act": "silu",
+        "bias": true,
+        "layout": "nn"
+      },
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 128,
+        "BLOCK_K": 64,
+        "num_warps": 4,
+        "num_stages": 3
+      },
+      "wave_eff": 0.9846,
+      "vendor": "addmm_then_act",
+      "flush_l2": false,
+      "uncaptured": {
+        "pairs": 7,
+        "a_median_ms": 0.5259,
+        "b_median_ms": 0.3678,
+        "speedup_median": 1.8995,
+        "speedup_ci95": [
+          1.29,
+          2.0299
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": false
+      },
+      "cuda_graph": {
+        "pairs": 7,
+        "a_median_ms": 0.4783,
+        "b_median_ms": 0.2811,
+        "speedup_median": 1.712,
+        "speedup_ci95": [
+          1.6255,
+          1.9074
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "cell": "decode",
+      "problem": {
+        "op": "matmul_bias_act",
+        "m": 64,
+        "n": 4096,
+        "k": 4096,
+        "dtype": "fp16",
+        "act": "silu",
+        "bias": true,
+        "layout": "nn"
+      },
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 64,
+        "BLOCK_K": 64,
+        "num_warps": 4,
+        "num_stages": 3
+      },
+      "wave_eff": 0.8,
+      "vendor": "addmm_then_act",
+      "flush_l2": true,
+      "uncaptured": {
+        "pairs": 7,
+        "a_median_ms": 0.2659,
+        "b_median_ms": 0.3466,
+        "speedup_median": 0.7677,
+        "speedup_ci95": [
+          0.5976,
+          0.8578
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": false
+      },
+      "cuda_graph": {
+        "pairs": 7,
+        "a_median_ms": 0.2116,
+        "b_median_ms": 0.1463,
+        "speedup_median": 1.3379,
+        "speedup_ci95": [
+          1.1496,
+          1.6374
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,2757 @@
+{
+  "mode": "triton_cpu_interpreter_not_gpu",
+  "torch": "2.14.0+cpu",
+  "triton": "3.7.1",
+  "params": {
+    "BLOCK_M": 16,
+    "BLOCK_N": 32,
+    "BLOCK_K": 32,
+    "num_warps": 4,
+    "num_stages": 2
+  },
+  "source_sha256": {
+    "scripts/research_precision_boundaries.py": "3b312916fd674edfb757b6cd5c29fd3206aa98e943053b06d9d49217cec677d3",
+    "ako/search/kernels/mm_fused.py": "339dcd909d4323304d037eb29120ab8dfd8c213d42978ce690b00528f70837a5",
+    "ako/search/constraints.py": "20ad0a74c5fdf3f34c1f766e7e8ec0806c5a657d197189485a889f290582ae53"
+  },
+  "cancellation_cases": [
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0625,
+      "first_actual": 0.0625,
+      "max_abs_error": 0.0,
+      "budget": 7.25e-05,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0625,
+      "first_actual": 0.0625,
+      "max_abs_error": 0.0,
+      "budget": 7.25e-05,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.0625,
+      "first_actual": 0.0625,
+      "max_abs_error": 0.0,
+      "budget": 7.25e-05,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0625,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0625,
+      "budget": 7.25e-05,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.0625,
+      "first_actual": 0.0625,
+      "max_abs_error": 0.0,
+      "budget": 7.25e-05,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0625,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0625,
+      "budget": 7.25e-05,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.0625,
+      "first_actual": 0.0625,
+      "max_abs_error": 0.0,
+      "budget": 7.25e-05,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": 0.0625,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0625,
+      "budget": 7.25e-05,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": 0.0625,
+      "first_actual": 0.0625,
+      "max_abs_error": 0.0,
+      "budget": 7.25e-05,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.25,
+      "first_actual": 0.25,
+      "max_abs_error": 0.0,
+      "budget": 0.00026000000000000003,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.25,
+      "first_actual": 0.25,
+      "max_abs_error": 0.0,
+      "budget": 0.00026000000000000003,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.25,
+      "first_actual": 0.25,
+      "max_abs_error": 0.0,
+      "budget": 0.00026000000000000003,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.25,
+      "first_actual": 0.0,
+      "max_abs_error": 0.25,
+      "budget": 0.00026000000000000003,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.25,
+      "first_actual": 0.25,
+      "max_abs_error": 0.0,
+      "budget": 0.00026000000000000003,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.25,
+      "first_actual": 0.0,
+      "max_abs_error": 0.25,
+      "budget": 0.00026000000000000003,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.25,
+      "first_actual": 0.25,
+      "max_abs_error": 0.0,
+      "budget": 0.00026000000000000003,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": 0.25,
+      "first_actual": 0.0,
+      "max_abs_error": 0.25,
+      "budget": 0.00026000000000000003,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": 0.25,
+      "first_actual": 0.25,
+      "max_abs_error": 0.0,
+      "budget": 0.00026000000000000003,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 1.0,
+      "first_actual": 1.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00101,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 1.0,
+      "first_actual": 1.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00101,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 1.0,
+      "first_actual": 1.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00101,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 1.0,
+      "first_actual": 0.0,
+      "max_abs_error": 1.0,
+      "budget": 0.00101,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": 1.0,
+      "first_actual": 1.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00101,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 1.0,
+      "first_actual": 0.0,
+      "max_abs_error": 1.0,
+      "budget": 0.00101,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 1.0,
+      "first_actual": 1.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00101,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": 1.0,
+      "first_actual": 0.0,
+      "max_abs_error": 1.0,
+      "budget": 0.00101,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": 1.0,
+      "first_actual": 1.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00101,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.0,
+      "first_actual": 4.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00401,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.0,
+      "first_actual": 4.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00401,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 4.0,
+      "first_actual": 4.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00401,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.0,
+      "first_actual": 0.0,
+      "max_abs_error": 4.0,
+      "budget": 0.00401,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": 4.0,
+      "first_actual": 4.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00401,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.0,
+      "first_actual": 0.0,
+      "max_abs_error": 4.0,
+      "budget": 0.00401,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 4.0,
+      "first_actual": 4.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00401,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": 4.0,
+      "first_actual": 0.0,
+      "max_abs_error": 4.0,
+      "budget": 0.00401,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": 4.0,
+      "first_actual": 4.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00401,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 16.0,
+      "first_actual": 16.0,
+      "max_abs_error": 0.0,
+      "budget": 0.01601,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 16.0,
+      "first_actual": 16.0,
+      "max_abs_error": 0.0,
+      "budget": 0.01601,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 16.0,
+      "first_actual": 16.0,
+      "max_abs_error": 0.0,
+      "budget": 0.01601,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 16.0,
+      "first_actual": 0.0,
+      "max_abs_error": 16.0,
+      "budget": 0.01601,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": 16.0,
+      "first_actual": 16.0,
+      "max_abs_error": 0.0,
+      "budget": 0.01601,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 16.0,
+      "first_actual": 0.0,
+      "max_abs_error": 16.0,
+      "budget": 0.01601,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 16.0,
+      "first_actual": 16.0,
+      "max_abs_error": 0.0,
+      "budget": 0.01601,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": 16.0,
+      "first_actual": 0.0,
+      "max_abs_error": 16.0,
+      "budget": 0.01601,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        1,
+        1,
+        2
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": 16.0,
+      "first_actual": 16.0,
+      "max_abs_error": 0.0,
+      "budget": 0.01601,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0625,
+      "first_actual": 0.0625,
+      "max_abs_error": 0.0,
+      "budget": 7.25e-05,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0625,
+      "first_actual": 0.0625,
+      "max_abs_error": 0.0,
+      "budget": 7.25e-05,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.0625,
+      "first_actual": 0.0625,
+      "max_abs_error": 0.0,
+      "budget": 7.25e-05,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0625,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0625,
+      "budget": 7.25e-05,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.0625,
+      "first_actual": 0.0625,
+      "max_abs_error": 0.0,
+      "budget": 7.25e-05,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0625,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0625,
+      "budget": 7.25e-05,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.0625,
+      "first_actual": 0.0625,
+      "max_abs_error": 0.0,
+      "budget": 7.25e-05,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": 0.0625,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0625,
+      "budget": 7.25e-05,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.0625,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": 0.0625,
+      "first_actual": 0.0625,
+      "max_abs_error": 0.0,
+      "budget": 7.25e-05,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.25,
+      "first_actual": 0.25,
+      "max_abs_error": 0.0,
+      "budget": 0.00026000000000000003,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.25,
+      "first_actual": 0.25,
+      "max_abs_error": 0.0,
+      "budget": 0.00026000000000000003,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.25,
+      "first_actual": 0.25,
+      "max_abs_error": 0.0,
+      "budget": 0.00026000000000000003,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.25,
+      "first_actual": 0.0,
+      "max_abs_error": 0.25,
+      "budget": 0.00026000000000000003,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.25,
+      "first_actual": 0.25,
+      "max_abs_error": 0.0,
+      "budget": 0.00026000000000000003,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.25,
+      "first_actual": 0.0,
+      "max_abs_error": 0.25,
+      "budget": 0.00026000000000000003,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.25,
+      "first_actual": 0.25,
+      "max_abs_error": 0.0,
+      "budget": 0.00026000000000000003,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": 0.25,
+      "first_actual": 0.0,
+      "max_abs_error": 0.25,
+      "budget": 0.00026000000000000003,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 0.25,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": 0.25,
+      "first_actual": 0.25,
+      "max_abs_error": 0.0,
+      "budget": 0.00026000000000000003,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 1.0,
+      "first_actual": 1.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00101,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 1.0,
+      "first_actual": 1.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00101,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 1.0,
+      "first_actual": 1.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00101,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 1.0,
+      "first_actual": 0.0,
+      "max_abs_error": 1.0,
+      "budget": 0.00101,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": 1.0,
+      "first_actual": 1.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00101,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 1.0,
+      "first_actual": 0.0,
+      "max_abs_error": 1.0,
+      "budget": 0.00101,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 1.0,
+      "first_actual": 1.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00101,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": 1.0,
+      "first_actual": 0.0,
+      "max_abs_error": 1.0,
+      "budget": 0.00101,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 1.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": 1.0,
+      "first_actual": 1.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00101,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.0,
+      "first_actual": 4.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00401,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.0,
+      "first_actual": 4.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00401,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 4.0,
+      "first_actual": 4.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00401,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.0,
+      "first_actual": 0.0,
+      "max_abs_error": 4.0,
+      "budget": 0.00401,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": 4.0,
+      "first_actual": 4.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00401,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.0,
+      "first_actual": 0.0,
+      "max_abs_error": 4.0,
+      "budget": 0.00401,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 4.0,
+      "first_actual": 4.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00401,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": 4.0,
+      "first_actual": 0.0,
+      "max_abs_error": 4.0,
+      "budget": 0.00401,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 4.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": 4.0,
+      "first_actual": 4.0,
+      "max_abs_error": 0.0,
+      "budget": 0.00401,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 16.0,
+      "first_actual": 16.0,
+      "max_abs_error": 0.0,
+      "budget": 0.01601,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 16.0,
+      "first_actual": 16.0,
+      "max_abs_error": 0.0,
+      "budget": 0.01601,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 16.0,
+      "first_actual": 16.0,
+      "max_abs_error": 0.0,
+      "budget": 0.01601,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 16.0,
+      "first_actual": 0.0,
+      "max_abs_error": 16.0,
+      "budget": 0.01601,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": 16.0,
+      "first_actual": 16.0,
+      "max_abs_error": 0.0,
+      "budget": 0.01601,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 16.0,
+      "first_actual": 0.0,
+      "max_abs_error": 16.0,
+      "budget": 0.01601,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 16.0,
+      "first_actual": 16.0,
+      "max_abs_error": 0.0,
+      "budget": 0.01601,
+      "passes_gate": true
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": 16.0,
+      "first_actual": 0.0,
+      "max_abs_error": 16.0,
+      "budget": 0.01601,
+      "passes_gate": false
+    },
+    {
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "scale": 16.0,
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": 16.0,
+      "first_actual": 16.0,
+      "max_abs_error": 0.0,
+      "budget": 0.01601,
+      "passes_gate": true
+    }
+  ],
+  "random_cases": [
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0009765625,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0009765625,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0009765625,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": -6.496906280517578e-06,
+      "first_actual": -6.496906280517578e-06,
+      "max_abs_error": 0.0,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": -6.496906280517578e-06,
+      "first_actual": -6.556510925292969e-06,
+      "max_abs_error": 0.001953125,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": -6.496906280517578e-06,
+      "first_actual": -6.496906280517578e-06,
+      "max_abs_error": 0.0,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": -6.496906280517578e-06,
+      "first_actual": -6.496906280517578e-06,
+      "max_abs_error": 0.001953125,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": -6.496906280517578e-06,
+      "first_actual": -6.496906280517578e-06,
+      "max_abs_error": 0.0,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": -6.496906280517578e-06,
+      "first_actual": -6.556510925292969e-06,
+      "max_abs_error": 0.001953125,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": -6.496906280517578e-06,
+      "first_actual": -6.556510925292969e-06,
+      "max_abs_error": 0.001953125,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": -6.496906280517578e-06,
+      "first_actual": -6.496906280517578e-06,
+      "max_abs_error": 0.001953125,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": -6.496906280517578e-06,
+      "first_actual": -6.496906280517578e-06,
+      "max_abs_error": 0.0,
+      "budget": 0.0071623437499999994,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": -0.051025390625,
+      "first_actual": -0.051025390625,
+      "max_abs_error": 0.0,
+      "budget": 0.0071584375,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": -0.051025390625,
+      "first_actual": -0.05108642578125,
+      "max_abs_error": 0.001953125,
+      "budget": 0.0071584375,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": -0.051025390625,
+      "first_actual": -0.051025390625,
+      "max_abs_error": 0.0,
+      "budget": 0.0071584375,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": -0.051025390625,
+      "first_actual": -0.051025390625,
+      "max_abs_error": 0.001953125,
+      "budget": 0.0071584375,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": -0.051025390625,
+      "first_actual": -0.051025390625,
+      "max_abs_error": 0.0,
+      "budget": 0.0071584375,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": -0.051025390625,
+      "first_actual": -0.05108642578125,
+      "max_abs_error": 0.001953125,
+      "budget": 0.0071584375,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": -0.051025390625,
+      "first_actual": -0.05108642578125,
+      "max_abs_error": 0.001953125,
+      "budget": 0.0071584375,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": -0.051025390625,
+      "first_actual": -0.051025390625,
+      "max_abs_error": 0.001953125,
+      "budget": 0.0071584375,
+      "passes_gate": true
+    },
+    {
+      "seed": 0,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": -0.051025390625,
+      "first_actual": -0.051025390625,
+      "max_abs_error": 0.0,
+      "budget": 0.0071584375,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.0,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.0,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.0,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.00390625,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.0,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.00390625,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.0,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.00390625,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.0,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.0,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.00048828125,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.0,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.00390625,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.0,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.00390625,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.00048828125,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.00390625,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": 4.16796875,
+      "first_actual": 4.16796875,
+      "max_abs_error": 0.0,
+      "budget": 0.00642796875,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.10546875,
+      "first_actual": 4.10546875,
+      "max_abs_error": 0.0,
+      "budget": 0.00641625,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.10546875,
+      "first_actual": 4.10546875,
+      "max_abs_error": 0.00048828125,
+      "budget": 0.00641625,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 4.10546875,
+      "first_actual": 4.10546875,
+      "max_abs_error": 0.0,
+      "budget": 0.00641625,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.10546875,
+      "first_actual": 4.10546875,
+      "max_abs_error": 0.00390625,
+      "budget": 0.00641625,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": 4.10546875,
+      "first_actual": 4.10546875,
+      "max_abs_error": 0.0,
+      "budget": 0.00641625,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 4.10546875,
+      "first_actual": 4.10546875,
+      "max_abs_error": 0.00390625,
+      "budget": 0.00641625,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 4.10546875,
+      "first_actual": 4.10546875,
+      "max_abs_error": 0.00048828125,
+      "budget": 0.00641625,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": 4.10546875,
+      "first_actual": 4.10546875,
+      "max_abs_error": 0.00390625,
+      "budget": 0.00641625,
+      "passes_gate": true
+    },
+    {
+      "seed": 1,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": 4.10546875,
+      "first_actual": 4.10546875,
+      "max_abs_error": 0.0,
+      "budget": 0.00641625,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0009765625,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0009765625,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0009765625,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "relu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": 0.0,
+      "first_actual": 0.0,
+      "max_abs_error": 0.0,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": -0.002414703369140625,
+      "first_actual": -0.002414703369140625,
+      "max_abs_error": 0.0,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": -0.002414703369140625,
+      "first_actual": -0.0024166107177734375,
+      "max_abs_error": 0.00048828125,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": -0.002414703369140625,
+      "first_actual": -0.002414703369140625,
+      "max_abs_error": 0.0,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": -0.002414703369140625,
+      "first_actual": -0.0024242401123046875,
+      "max_abs_error": 0.0009765625,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": -0.002414703369140625,
+      "first_actual": -0.002414703369140625,
+      "max_abs_error": 0.0,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": -0.002414703369140625,
+      "first_actual": -0.0024166107177734375,
+      "max_abs_error": 0.0009765625,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": -0.002414703369140625,
+      "first_actual": -0.0024166107177734375,
+      "max_abs_error": 0.00048828125,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": -0.002414703369140625,
+      "first_actual": -0.0024242401123046875,
+      "max_abs_error": 0.0009765625,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "gelu_tanh",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": -0.002414703369140625,
+      "first_actual": -0.002414703369140625,
+      "max_abs_error": 0.0,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm+bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": -0.1314697265625,
+      "first_actual": -0.1314697265625,
+      "max_abs_error": 0.0,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": -0.1314697265625,
+      "first_actual": -0.1314697265625,
+      "max_abs_error": 0.00048828125,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm+bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": -0.1314697265625,
+      "first_actual": -0.1314697265625,
+      "max_abs_error": 0.0,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 0,
+      "first_reference": -0.1314697265625,
+      "first_actual": -0.131591796875,
+      "max_abs_error": 0.00048828125,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias+act",
+      "fp32_boundaries": 1,
+      "first_reference": -0.1314697265625,
+      "first_actual": -0.1314697265625,
+      "max_abs_error": 0.0,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 0,
+      "first_reference": -0.1314697265625,
+      "first_actual": -0.1314697265625,
+      "max_abs_error": 0.00048828125,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 1,
+      "first_reference": -0.1314697265625,
+      "first_actual": -0.1314697265625,
+      "max_abs_error": 0.00048828125,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 2,
+      "first_reference": -0.1314697265625,
+      "first_actual": -0.131591796875,
+      "max_abs_error": 0.00048828125,
+      "budget": 0.0084475,
+      "passes_gate": true
+    },
+    {
+      "seed": 2,
+      "shape": [
+        3,
+        5,
+        17
+      ],
+      "act": "silu",
+      "composition": "mm|bias|act",
+      "fp32_boundaries": 3,
+      "first_reference": -0.1314697265625,
+      "first_actual": -0.1314697265625,
+      "max_abs_error": 0.0,
+      "budget": 0.0084475,
+      "passes_gate": true
+    }
+  ]
+}

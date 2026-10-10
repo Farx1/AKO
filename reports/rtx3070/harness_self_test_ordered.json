@@ -1,0 +1,38 @@
+{
+  "created_at": "2026-09-23T22:03:51.654393+00:00",
+  "preflight": {
+    "checked": true,
+    "error": "GPU is not idle: utilization.gpu = 30% (want < 3%)"
+  },
+  "publishable": false,
+  "error": 0.125,
+  "error_budget": 0.30001,
+  "h7_pass": false,
+  "h8_pass": true,
+  "self": {
+    "pairs": 31,
+    "a_median_ms": 0.0863,
+    "b_median_ms": 0.1006,
+    "speedup_median": 0.791,
+    "speedup_ci95": [
+      0.609,
+      1.156
+    ],
+    "significant": false,
+    "unstable": true,
+    "graph_captured": true
+  },
+  "lead": {
+    "pairs": 31,
+    "a_median_ms": 0.1137,
+    "b_median_ms": 0.0472,
+    "speedup_median": 2.5281,
+    "speedup_ci95": [
+      2.0073,
+      3.6196
+    ],
+    "significant": true,
+    "unstable": true,
+    "graph_captured": true
+  }
+}

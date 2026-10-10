@@ -1,0 +1,14 @@
+                     AKO Environment                     
+┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Key              ┃ Value                              ┃
+┡━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Python           │ 3.12.13                            │
+│ PyTorch          │ 2.6.0+cu124                        │
+│ Compute backend  │ cuda                               │
+│ CUDA available   │ True                               │
+│ Triton available │ True                               │
+│ Device info      │ NVIDIA GeForce RTX 3070 Laptop GPU │
+│ GPU vendor       │ nvidia                             │
+└──────────────────┴────────────────────────────────────┘
+
+CUDA pipeline available — run: pytest -q

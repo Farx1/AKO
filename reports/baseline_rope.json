@@ -1,0 +1,33 @@
+{
+  "operation": "rope",
+  "gpu": "cpu (amd_gpu=Advanced Micro Devices, Inc. [AMD/ATI] Device 1114 (rev c3))",
+  "device": {
+    "device_type": "cpu",
+    "device_name": "cpu (amd_gpu=Advanced Micro Devices, Inc. [AMD/ATI] Device 1114 (rev c3))",
+    "device_index": -1,
+    "cuda_capability": null,
+    "total_memory_gb": null,
+    "driver_version": null,
+    "gpu_vendor": "amd",
+    "compute_backend": "cpu"
+  },
+  "created_at": "2026-07-02T15:16:39.998034+00:00",
+  "results": [
+    {
+      "kernel_name": "rope_ref",
+      "shape": [
+        2,
+        32,
+        128,
+        128
+      ],
+      "dtype": "float32",
+      "device": "cpu",
+      "latency_p50_ms": 5.9049,
+      "latency_p95_ms": 8.3328,
+      "latency_mean_ms": 6.1154,
+      "latency_std_ms": 1.1248
+    }
+  ],
+  "comparisons": []
+}

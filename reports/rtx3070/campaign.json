@@ -1,0 +1,85 @@
+{
+  "created_at": "2026-08-14T09:28:20.836883+00:00",
+  "mode": "full",
+  "device": "cuda",
+  "dtypes": [
+    "fp16",
+    "bf16"
+  ],
+  "repeats": 30,
+  "estimated_seconds": 2045,
+  "planned": [
+    "environment",
+    "health",
+    "rmsnorm",
+    "rope",
+    "swiglu",
+    "serving",
+    "profile"
+  ],
+  "steps": {
+    "environment": {
+      "status": "ok",
+      "seconds": 0.15,
+      "output": "environment.json",
+      "gpu": "NVIDIA GeForce RTX 3070 Laptop GPU"
+    },
+    "health": {
+      "status": "ok",
+      "seconds": 0.53,
+      "output": "health.json",
+      "probe": "rmsnorm_ref",
+      "shape": [
+        8,
+        512,
+        2048
+      ],
+      "dtype": "float16",
+      "run_p50_ms": [
+        1.07771,
+        1.05185
+      ],
+      "drift": 0.0246,
+      "tolerance": 0.1,
+      "enforced": true
+    },
+    "rmsnorm": {
+      "status": "ok",
+      "seconds": 20.97,
+      "output": "baseline_rmsnorm.json",
+      "log": "/mnt/e/dev/AKO/reports/rtx3070/logs/rmsnorm.log"
+    },
+    "rope": {
+      "status": "ok",
+      "seconds": 21.24,
+      "output": "rope_benchmark.json",
+      "log": "/mnt/e/dev/AKO/reports/rtx3070/logs/rope.log"
+    },
+    "swiglu": {
+      "status": "ok",
+      "seconds": 16.33,
+      "output": "swiglu_benchmark.json",
+      "log": "/mnt/e/dev/AKO/reports/rtx3070/logs/swiglu.log"
+    },
+    "serving": {
+      "status": "ok",
+      "seconds": 147.9,
+      "output": "serving_simulation.json",
+      "log": "/mnt/e/dev/AKO/reports/rtx3070/logs/serving.log"
+    },
+    "profile": {
+      "status": "ok",
+      "seconds": 53.55,
+      "output": "model_profile.json",
+      "log": "/mnt/e/dev/AKO/reports/rtx3070/logs/profile.log"
+    }
+  },
+  "summary": {
+    "rmsnorm_decode_speedup_vs_best_baseline": 0.8605,
+    "rmsnorm_prefill_speedup_vs_best_baseline": 1.031,
+    "rope_speedup_vs_best_baseline": 1.226,
+    "swiglu_speedup_vs_best_baseline": 0.999,
+    "decode_end_to_end_speedup_vs_best_baseline": 0.65,
+    "adaptive_vs_best_fixed_policy": 0.9105691423444571
+  }
+}

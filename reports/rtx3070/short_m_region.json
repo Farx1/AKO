@@ -1,0 +1,236 @@
+{
+  "created_at": "2026-09-23T20:48:06.411998+00:00",
+  "preflight": {
+    "checked": true,
+    "error": "GPU is not idle: utilization.gpu = 38% (want < 3%)"
+  },
+  "publishable": false,
+  "note": "speedup is vendor/fused. >1 means the Triton tile is faster. gemm rows are graphed a@b. gemm_bias is graphed addmm. gemm_uncaptured is the M=16 lead without a CUDA graph. Absolute times stay unquotable when unstable or the card is busy.",
+  "rows": [
+    {
+      "cell": "gemm",
+      "m": 1,
+      "n": 4096,
+      "k": 4096,
+      "block_m": 16,
+      "bias": false,
+      "graph": true,
+      "vendor": "matmul",
+      "error": 0.125,
+      "error_budget": 0.236385,
+      "vs_vendor": {
+        "pairs": 11,
+        "a_median_ms": 0.3939,
+        "b_median_ms": 0.1765,
+        "speedup_median": 1.7737,
+        "speedup_ci95": [
+          1.5763,
+          2.9691
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "cell": "gemm",
+      "m": 8,
+      "n": 4096,
+      "k": 4096,
+      "block_m": 16,
+      "bias": false,
+      "graph": true,
+      "vendor": "matmul",
+      "error": 0.125,
+      "error_budget": 0.28501000000000004,
+      "vs_vendor": {
+        "pairs": 11,
+        "a_median_ms": 0.3681,
+        "b_median_ms": 0.2228,
+        "speedup_median": 1.707,
+        "speedup_ci95": [
+          1.5043,
+          2.6139
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "cell": "gemm",
+      "m": 16,
+      "n": 4096,
+      "k": 4096,
+      "block_m": 16,
+      "bias": false,
+      "graph": true,
+      "vendor": "matmul",
+      "error": 0.125,
+      "error_budget": 0.26851,
+      "vs_vendor": {
+        "pairs": 11,
+        "a_median_ms": 0.4967,
+        "b_median_ms": 0.3439,
+        "speedup_median": 1.6213,
+        "speedup_ci95": [
+          1.1727,
+          2.2667
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "cell": "gemm",
+      "m": 32,
+      "n": 4096,
+      "k": 4096,
+      "block_m": 32,
+      "bias": false,
+      "graph": true,
+      "vendor": "matmul",
+      "error": 0.0,
+      "error_budget": 0.29176,
+      "vs_vendor": {
+        "pairs": 11,
+        "a_median_ms": 0.7373,
+        "b_median_ms": 0.3564,
+        "speedup_median": 1.9518,
+        "speedup_ci95": [
+          1.3956,
+          2.993
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "cell": "gemm",
+      "m": 64,
+      "n": 4096,
+      "k": 4096,
+      "block_m": 64,
+      "bias": false,
+      "graph": true,
+      "vendor": "matmul",
+      "error": 0.0,
+      "error_budget": 0.28101000000000004,
+      "vs_vendor": {
+        "pairs": 11,
+        "a_median_ms": 0.3879,
+        "b_median_ms": 0.4484,
+        "speedup_median": 0.902,
+        "speedup_ci95": [
+          0.5948,
+          1.519
+        ],
+        "significant": false,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "cell": "gemm",
+      "m": 128,
+      "n": 4096,
+      "k": 4096,
+      "block_m": 64,
+      "bias": false,
+      "graph": true,
+      "vendor": "matmul",
+      "error": 0.0,
+      "error_budget": 0.30551,
+      "vs_vendor": {
+        "pairs": 11,
+        "a_median_ms": 0.3645,
+        "b_median_ms": 0.3619,
+        "speedup_median": 0.9384,
+        "speedup_ci95": [
+          0.7306,
+          1.3974
+        ],
+        "significant": false,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "cell": "gemm",
+      "m": 256,
+      "n": 4096,
+      "k": 4096,
+      "block_m": 64,
+      "bias": false,
+      "graph": true,
+      "vendor": "matmul",
+      "error": 0.0,
+      "error_budget": 0.31301,
+      "vs_vendor": {
+        "pairs": 11,
+        "a_median_ms": 1.0334,
+        "b_median_ms": 1.0472,
+        "speedup_median": 0.9986,
+        "speedup_ci95": [
+          0.9228,
+          1.1394
+        ],
+        "significant": false,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "cell": "gemm_bias",
+      "m": 16,
+      "n": 4096,
+      "k": 4096,
+      "block_m": 16,
+      "bias": true,
+      "graph": true,
+      "vendor": "addmm",
+      "error": 0.0,
+      "error_budget": 0.26801,
+      "vs_vendor": {
+        "pairs": 11,
+        "a_median_ms": 0.3421,
+        "b_median_ms": 0.1885,
+        "speedup_median": 1.9708,
+        "speedup_ci95": [
+          1.0928,
+          2.8225
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "cell": "gemm_uncaptured",
+      "m": 16,
+      "n": 4096,
+      "k": 4096,
+      "block_m": 16,
+      "bias": false,
+      "graph": false,
+      "vendor": "matmul",
+      "error": 0.125,
+      "error_budget": 0.26851,
+      "vs_vendor": {
+        "pairs": 11,
+        "a_median_ms": 0.2262,
+        "b_median_ms": 0.2452,
+        "speedup_median": 0.9279,
+        "speedup_ci95": [
+          0.8836,
+          1.7767
+        ],
+        "significant": false,
+        "unstable": true,
+        "graph_captured": false
+      }
+    }
+  ]
+}

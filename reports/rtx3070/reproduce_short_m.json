@@ -1,0 +1,96 @@
+{
+  "created_at": "2026-09-23T20:58:36.279933+00:00",
+  "preflight": {
+    "checked": true,
+    "error": "GPU is not idle: utilization.gpu = 28% (want < 3%)"
+  },
+  "publishable": false,
+  "hypotheses": [
+    "H1",
+    "H2",
+    "H3"
+  ],
+  "note": "Second run of the short-row rule. See RESEARCH_LOG.md for the pass rule.",
+  "rows": [
+    {
+      "m": 16,
+      "graph": true,
+      "block_m": 16,
+      "error": 0.25,
+      "relation_to_1": "above",
+      "vs_matmul": {
+        "pairs": 21,
+        "a_median_ms": 0.1846,
+        "b_median_ms": 0.1099,
+        "speedup_median": 1.5023,
+        "speedup_ci95": [
+          1.3528,
+          1.7228
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "m": 32,
+      "graph": true,
+      "block_m": 32,
+      "error": 0.0,
+      "relation_to_1": "above",
+      "vs_matmul": {
+        "pairs": 21,
+        "a_median_ms": 0.1378,
+        "b_median_ms": 0.1147,
+        "speedup_median": 1.1307,
+        "speedup_ci95": [
+          1.0305,
+          1.3804
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "m": 64,
+      "graph": true,
+      "block_m": 64,
+      "error": 0.0,
+      "relation_to_1": "contains",
+      "vs_matmul": {
+        "pairs": 21,
+        "a_median_ms": 0.344,
+        "b_median_ms": 0.3432,
+        "speedup_median": 0.9747,
+        "speedup_ci95": [
+          0.8497,
+          1.067
+        ],
+        "significant": false,
+        "unstable": true,
+        "graph_captured": true
+      }
+    },
+    {
+      "m": 16,
+      "graph": false,
+      "block_m": 16,
+      "error": 0.25,
+      "relation_to_1": "above",
+      "vs_matmul": {
+        "pairs": 21,
+        "a_median_ms": 0.3931,
+        "b_median_ms": 0.1613,
+        "speedup_median": 1.9826,
+        "speedup_ci95": [
+          1.2265,
+          2.5084
+        ],
+        "significant": true,
+        "unstable": true,
+        "graph_captured": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "gpu": "cpu (amd_gpu=Advanced Micro Devices, Inc. [AMD/ATI] Device 1114 (rev c3))",
+  "compute_backend": "cpu",
+  "operations": {
+    "rmsnorm": {
+      "selected_kernel": "rmsnorm_ref",
+      "comparisons": []
+    },
+    "rope": {
+      "selected_kernel": "rope_ref",
+      "comparisons": []
+    }
+  }
+}

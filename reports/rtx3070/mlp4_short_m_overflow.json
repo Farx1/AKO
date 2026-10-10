@@ -1,0 +1,24 @@
+{
+  "created_at": "2026-09-23T22:09:48.285243+00:00",
+  "preflight": {
+    "checked": true,
+    "error": "GPU is not idle: utilization.gpu = 38% (want < 3%)"
+  },
+  "publishable": false,
+  "stack_error": NaN,
+  "h11_pass": true,
+  "relation_to_1": "above",
+  "vs_matmul_stack": {
+    "pairs": 21,
+    "a_median_ms": 0.4251,
+    "b_median_ms": 0.2661,
+    "speedup_median": 1.6068,
+    "speedup_ci95": [
+      1.4094,
+      1.7852
+    ],
+    "significant": true,
+    "unstable": true,
+    "graph_captured": true
+  }
+}

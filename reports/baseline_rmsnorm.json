@@ -1,0 +1,32 @@
+{
+  "operation": "rmsnorm",
+  "gpu": "cpu (amd_gpu=Advanced Micro Devices, Inc. [AMD/ATI] Device 1114 (rev c3))",
+  "device": {
+    "device_type": "cpu",
+    "device_name": "cpu (amd_gpu=Advanced Micro Devices, Inc. [AMD/ATI] Device 1114 (rev c3))",
+    "device_index": -1,
+    "cuda_capability": null,
+    "total_memory_gb": null,
+    "driver_version": null,
+    "gpu_vendor": "amd",
+    "compute_backend": "cpu"
+  },
+  "created_at": "2026-07-02T15:16:39.832562+00:00",
+  "results": [
+    {
+      "kernel_name": "rmsnorm_ref",
+      "shape": [
+        2,
+        128,
+        4096
+      ],
+      "dtype": "float32",
+      "device": "cpu",
+      "latency_p50_ms": 1.4467,
+      "latency_p95_ms": 2.0669,
+      "latency_mean_ms": 1.5491,
+      "latency_std_ms": 0.2737
+    }
+  ],
+  "comparisons": []
+}

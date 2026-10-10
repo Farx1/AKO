@@ -1,0 +1,40 @@
+{
+  "framework": "ako",
+  "step": "optimize-kernels",
+  "timestamp": "2026-07-02T15:16:40.358508+00:00",
+  "parameters": {
+    "batch_size": 2,
+    "seq_len": 128,
+    "dtype": "fp32"
+  },
+  "operations": {
+    "rmsnorm": {
+      "gpu": "cpu (amd_gpu=Advanced Micro Devices, Inc. [AMD/ATI] Device 1114 (rev c3))",
+      "num_comparisons": 0,
+      "best_speedup": null
+    },
+    "rope": {
+      "gpu": "cpu (amd_gpu=Advanced Micro Devices, Inc. [AMD/ATI] Device 1114 (rev c3))",
+      "num_comparisons": 0,
+      "best_speedup": null
+    }
+  },
+  "selected_config": {
+    "gpu": "cpu (amd_gpu=Advanced Micro Devices, Inc. [AMD/ATI] Device 1114 (rev c3))",
+    "compute_backend": "cpu",
+    "operations": {
+      "rmsnorm": {
+        "selected_kernel": "rmsnorm_ref",
+        "comparisons": []
+      },
+      "rope": {
+        "selected_kernel": "rope_ref",
+        "comparisons": []
+      }
+    }
+  },
+  "report_refs": {
+    "rmsnorm": "baseline_rmsnorm.json",
+    "rope": "baseline_rope.json"
+  }
+}

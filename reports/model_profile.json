@@ -1,0 +1,28 @@
+{
+  "model": "tiny-llama",
+  "device": "cpu",
+  "dtype": "float32",
+  "batch_size": 1,
+  "seq_len": 16,
+  "patched_modules": {
+    "rmsnorm": 3,
+    "rope": 1
+  },
+  "baseline": {
+    "latency_p50_ms": 0.5292,
+    "latency_p95_ms": 0.5961,
+    "latency_mean_ms": 0.5146,
+    "tokens_per_sec": 30234.32
+  },
+  "ako_hooked": {
+    "latency_p50_ms": 0.3991,
+    "latency_p95_ms": 0.4035,
+    "latency_mean_ms": 0.3965,
+    "tokens_per_sec": 40090.2,
+    "kernels": {
+      "rmsnorm": "rmsnorm_ref",
+      "rope": "rope_ref"
+    }
+  },
+  "max_logit_error": 0.0
+}

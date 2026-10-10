@@ -1,0 +1,328 @@
+{
+  "created_at": "2026-09-23T19:03:19.559861+00:00",
+  "device": "NVIDIA GeForce RTX 3070 Laptop GPU",
+  "sm_count": 40,
+  "preflight": {
+    "checked": true,
+    "error": "GPU is not idle: utilization.gpu = 24% (want < 3%)"
+  },
+  "publishable": false,
+  "note": "speedup_median is baseline/fused from interleaved pairs. >1 means the fused Triton kernel is faster. gelu_tanh vs torch._addmm_activation is the vendor control; silu vs addmm_then_act is the path PyTorch does not fuse. flush_l2 is off when K<=256: the output does not fit in L2 either way. torch.compile(mode=max-autotune) logged: Not enough SMs to use max_autotune_gemm mode. Absolute series are unstable; do not quote milliseconds.",
+  "cells": [
+    {
+      "problem": {
+        "op": "matmul_bias_act",
+        "m": 4096,
+        "n": 4096,
+        "k": 64,
+        "dtype": "fp16",
+        "act": "silu",
+        "bias": true,
+        "layout": "nn"
+      },
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 128,
+        "BLOCK_K": 64,
+        "num_warps": 4,
+        "num_stages": 3
+      },
+      "probes": [
+        {
+          "tile": {
+            "BLOCK_M": 64,
+            "BLOCK_N": 64,
+            "BLOCK_K": 32,
+            "num_warps": 4,
+            "num_stages": 3
+          },
+          "vs_vendor_probe": 1.431
+        },
+        {
+          "tile": {
+            "BLOCK_M": 64,
+            "BLOCK_N": 64,
+            "BLOCK_K": 64,
+            "num_warps": 4,
+            "num_stages": 3
+          },
+          "vs_vendor_probe": 1.8015
+        },
+        {
+          "tile": {
+            "BLOCK_M": 64,
+            "BLOCK_N": 128,
+            "BLOCK_K": 32,
+            "num_warps": 4,
+            "num_stages": 3
+          },
+          "vs_vendor_probe": 1.5067
+        },
+        {
+          "tile": {
+            "BLOCK_M": 64,
+            "BLOCK_N": 128,
+            "BLOCK_K": 64,
+            "num_warps": 4,
+            "num_stages": 3
+          },
+          "vs_vendor_probe": 2.1972
+        }
+      ],
+      "wave_eff": 0.9846,
+      "sm_count": 40,
+      "fused_vs_eager_error": 0.03125,
+      "vendor_vs_eager_error": 0.03125,
+      "error_budget": 0.04935375,
+      "fused_within_budget": true,
+      "vendor": "addmm_then_act",
+      "flush_l2": false,
+      "vs_eager": {
+        "pairs": 11,
+        "a_median_ms": 0.7333,
+        "b_median_ms": 0.2688,
+        "speedup_median": 2.9632,
+        "speedup_ci95": [
+          2.1563,
+          3.1022
+        ],
+        "significant": true,
+        "unstable": true
+      },
+      "vs_vendor": {
+        "pairs": 11,
+        "a_median_ms": 0.4739,
+        "b_median_ms": 0.2546,
+        "speedup_median": 1.9448,
+        "speedup_ci95": [
+          1.9258,
+          2.3403
+        ],
+        "significant": true,
+        "unstable": true
+      },
+      "vs_compile": {
+        "pairs": 11,
+        "a_median_ms": 0.6922,
+        "b_median_ms": 0.2895,
+        "speedup_median": 2.4903,
+        "speedup_ci95": [
+          2.3021,
+          2.6348
+        ],
+        "significant": true,
+        "unstable": true
+      }
+    },
+    {
+      "problem": {
+        "op": "matmul_bias_act",
+        "m": 4096,
+        "n": 4096,
+        "k": 64,
+        "dtype": "fp16",
+        "act": "gelu_tanh",
+        "bias": true,
+        "layout": "nn"
+      },
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 64,
+        "BLOCK_K": 64,
+        "num_warps": 4,
+        "num_stages": 3
+      },
+      "probes": [
+        {
+          "tile": {
+            "BLOCK_M": 64,
+            "BLOCK_N": 64,
+            "BLOCK_K": 32,
+            "num_warps": 4,
+            "num_stages": 3
+          },
+          "vs_vendor_probe": 1.0174
+        },
+        {
+          "tile": {
+            "BLOCK_M": 64,
+            "BLOCK_N": 64,
+            "BLOCK_K": 64,
+            "num_warps": 4,
+            "num_stages": 3
+          },
+          "vs_vendor_probe": 1.8351
+        },
+        {
+          "tile": {
+            "BLOCK_M": 64,
+            "BLOCK_N": 128,
+            "BLOCK_K": 32,
+            "num_warps": 4,
+            "num_stages": 3
+          },
+          "vs_vendor_probe": 1.2933
+        },
+        {
+          "tile": {
+            "BLOCK_M": 64,
+            "BLOCK_N": 128,
+            "BLOCK_K": 64,
+            "num_warps": 4,
+            "num_stages": 3
+          },
+          "vs_vendor_probe": 1.459
+        }
+      ],
+      "wave_eff": 0.9942,
+      "sm_count": 40,
+      "fused_vs_eager_error": 0.03125,
+      "vendor_vs_eager_error": 0.00390625,
+      "error_budget": 0.04935375,
+      "fused_within_budget": true,
+      "vendor": "torch._addmm_activation",
+      "flush_l2": false,
+      "vs_eager": {
+        "pairs": 11,
+        "a_median_ms": 0.7503,
+        "b_median_ms": 0.305,
+        "speedup_median": 2.4587,
+        "speedup_ci95": [
+          2.3843,
+          2.9043
+        ],
+        "significant": true,
+        "unstable": true
+      },
+      "vs_vendor": {
+        "pairs": 11,
+        "a_median_ms": 0.5248,
+        "b_median_ms": 0.3935,
+        "speedup_median": 1.3995,
+        "speedup_ci95": [
+          1.0618,
+          1.6346
+        ],
+        "significant": true,
+        "unstable": true
+      },
+      "vs_compile": {
+        "pairs": 11,
+        "a_median_ms": 0.641,
+        "b_median_ms": 0.2537,
+        "speedup_median": 2.6641,
+        "speedup_ci95": [
+          2.373,
+          2.8737
+        ],
+        "significant": true,
+        "unstable": true
+      }
+    },
+    {
+      "problem": {
+        "op": "matmul_bias_act",
+        "m": 1024,
+        "n": 1024,
+        "k": 1024,
+        "dtype": "fp16",
+        "act": "silu",
+        "bias": true,
+        "layout": "nn"
+      },
+      "tile": {
+        "BLOCK_M": 64,
+        "BLOCK_N": 128,
+        "BLOCK_K": 64,
+        "num_warps": 4,
+        "num_stages": 3
+      },
+      "probes": [
+        {
+          "tile": {
+            "BLOCK_M": 64,
+            "BLOCK_N": 64,
+            "BLOCK_K": 32,
+            "num_warps": 4,
+            "num_stages": 3
+          },
+          "vs_vendor_probe": 0.7005
+        },
+        {
+          "tile": {
+            "BLOCK_M": 64,
+            "BLOCK_N": 64,
+            "BLOCK_K": 64,
+            "num_warps": 4,
+            "num_stages": 3
+          },
+          "vs_vendor_probe": 1.1343
+        },
+        {
+          "tile": {
+            "BLOCK_M": 64,
+            "BLOCK_N": 128,
+            "BLOCK_K": 32,
+            "num_warps": 4,
+            "num_stages": 3
+          },
+          "vs_vendor_probe": 0.657
+        },
+        {
+          "tile": {
+            "BLOCK_M": 64,
+            "BLOCK_N": 128,
+            "BLOCK_K": 64,
+            "num_warps": 4,
+            "num_stages": 3
+          },
+          "vs_vendor_probe": 1.1419
+        }
+      ],
+      "wave_eff": 0.8,
+      "sm_count": 40,
+      "fused_vs_eager_error": 0.125,
+      "vendor_vs_eager_error": 0.125,
+      "error_budget": 0.16326000000000002,
+      "fused_within_budget": true,
+      "vendor": "addmm_then_act",
+      "flush_l2": true,
+      "vs_eager": {
+        "pairs": 11,
+        "a_median_ms": 0.1999,
+        "b_median_ms": 0.2676,
+        "speedup_median": 0.7955,
+        "speedup_ci95": [
+          0.6062,
+          1.0515
+        ],
+        "significant": false,
+        "unstable": true
+      },
+      "vs_vendor": {
+        "pairs": 11,
+        "a_median_ms": 0.1491,
+        "b_median_ms": 0.1623,
+        "speedup_median": 0.8435,
+        "speedup_ci95": [
+          0.5821,
+          1.0431
+        ],
+        "significant": false,
+        "unstable": true
+      },
+      "vs_compile": {
+        "pairs": 11,
+        "a_median_ms": 0.426,
+        "b_median_ms": 0.2314,
+        "speedup_median": 2.1129,
+        "speedup_ci95": [
+          1.2211,
+          2.2039
+        ],
+        "significant": true,
+        "unstable": true
+      }
+    }
+  ]
+}
