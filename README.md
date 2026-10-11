@@ -187,9 +187,12 @@ runs at 1.42× the best baseline at 4 MiB and at 0.67× at 8 MiB.
 ## What this is not
 
 - **Not a fast inference server.** Use vLLM, SGLang or TensorRT-LLM.
-- **Not a kernel library.** Three operations: RMSNorm, fused residual+RMSNorm, RoPE.
+- **Not a kernel library.** Four dispatched operations: RMSNorm, fused residual+RMSNorm,
+  RoPE, SwiGLU.
 - **Not multi-vendor.** NVIDIA + CUDA. AMD/ROCm is detected and refused, not supported.
-- **Not attention or GEMM** — the parts that actually dominate inference time.
+- **Not attention or a production GEMM** — the parts that actually dominate inference
+  time. `ako/search/kernels/mm_fused.py` is an experimental GEMM-with-epilogue
+  template for the search harness, not a dispatched operation.
 
 ## How it works
 
@@ -291,7 +294,7 @@ q = ako.rope(q, cos, sin, "interleaved")   # GPT-J
 | `AKO_CACHE_PATH` | `~/.ako/kernel_cache.json` | Where decisions persist |
 | `AKO_ENABLE_COMPILE` | unset | Include `torch.compile` baselines (slow first call) |
 
-Load real weights with `pip install "ako[hf]"`:
+Load real weights after `pip install -e ".[hf]"` (the package is not on PyPI):
 
 ```python
 from ako.models import load_hf_model
@@ -323,16 +326,16 @@ is not yet something to depend on:
 | | Status |
 |---|--------|
 | Public API (`ako.rmsnorm`, `ako.rope`, …) | ✅ stable, typed, documented |
-| Kernel registry open to third-party kernels | ⚠️ works, but `KernelEntry` is not documented as an extension point |
+| Kernel registry open to third-party kernels | ✅ `KernelEntry` contract in [`docs/EXTENDING.md`](docs/EXTENDING.md) |
 | Published on PyPI | ❌ install from git only |
-| Semantic versioning + changelog | ❌ |
+| Semantic versioning + changelog | ⚠️ [`CHANGELOG.md`](CHANGELOG.md), semver from `0.2.0`; no release or tag yet |
 | Hardware coverage | ⚠️ one GPU measured |
 | `ako.models` / `ako.experiments` | ⚠️ research scaffolding, not library surface |
 
 The extension point is the piece that decides whether this becomes a library
 someone else uses: registering your own kernel as a candidate and letting the
-harness prove it correct before it runs. That path exists in the code and is
-exercised by the tests, but it is not documented as a public contract yet.
+harness prove it correct before it runs. That path is exercised by the tests and
+documented in [`docs/EXTENDING.md`](docs/EXTENDING.md).
 
 Known gaps: the decode and serving regressions are unexplained; and a single GPU has been measured, so nothing is
 claimed about portability across hardware — which is precisely the claim the
