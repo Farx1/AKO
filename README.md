@@ -18,8 +18,9 @@ PyTorch. You ship it.
 
 Three things then happen that nothing in your workflow catches.
 
-**It is not faster everywhere.** On an RTX 3070, across 72 shape × dtype
-configurations, that same kernel *loses* to PyTorch on 22 of them — by up to 55 %.
+**It is not faster everywhere.** On an RTX 3070 Laptop GPU, across 24 shape × dtype
+configurations, that same kernel *loses* to the best PyTorch baseline on 12 of them —
+by up to 1.69× (it takes 69 % longer).
 A kernel is fast for a memory access pattern, not for an operation, and serving
 workloads do not hold their shapes still: prompt lengths vary per request, dynamic
 batching moves the batch dimension, and prefill and decode are two different
@@ -72,16 +73,17 @@ flowchart LR
     style RUN fill:#2a9d63,stroke:#2a9d63,color:#ffffff
 ```
 
-Errors are reported in **ulps**, so the number means the same thing in fp32, fp16
-and bf16: 1 ulp is a rounding disagreement, a genuinely wrong kernel counts in the
-thousands.
+The gate itself is an absolute-error budget, `atol + rtol(dtype) × max|reference|`
+(`ako/validation/numerical.py`). Rejection messages also report the error in
+**ulps**, so the number reads the same in fp32, fp16 and bf16: 1 ulp is a rounding
+disagreement, a genuinely wrong kernel counts in the thousands.
 
 The PyTorch baseline is always a candidate. Selection minimizes measured latency
 among surviving candidates; it does not guarantee performance on future inputs or
 in a different execution context. A candidate that raises is dropped, not propagated.
 
 ```jsonc
-// ~/.ako/kernel_cache.json — every decision is auditable
+// ~/.ako/kernel_cache.json — every decision is auditable (illustrative values)
 {
   "kernel": "rmsnorm_triton",
   "latency_p50_ms": 0.319,
@@ -118,19 +120,20 @@ Full campaign in [`docs/RESULTS.md`](docs/RESULTS.md), raw JSON in
 
 | Operation | vs unfused reference | **vs best baseline** | Triton loses on |
 |-----------|---------------------:|---------------------:|-----------------|
-| RMSNorm fp16 | 7.30× | **1.07×** | 8 / 36 shapes |
-| RMSNorm bf16 | 6.95× | **1.03×** | 14 / 36 shapes |
-| RoPE fp16 | 5.31× | **1.17×** | 1 / 8 shapes |
-| RoPE bf16 | 5.40× | **1.07×** | 3 / 8 shapes |
+| RMSNorm fp16 | 7.01× | **1.01×** | 6 / 12 shapes |
+| RMSNorm bf16 | 7.65× | **1.01×** | 6 / 12 shapes |
+| RoPE fp16 | 3.99× | **1.16×** | 2 / 6 shapes |
+| RoPE bf16 | 4.67× | **1.23×** | 2 / 6 shapes |
 
-*(medians; the best baseline is almost always `torch.compile`)*
+*(medians; the best baseline is `torch.compile` on 34 of 36 configs. Shapes include
+decode-sized `seq_len = 1` rows.)*
 
 ![Speedup against the unfused reference versus against the best baseline](docs/images/baseline-gap.png)
 
 **Read the middle column, not the left one.** Beating an unfused reference by 7×
 mostly measures the intermediates it materializes (~40 bytes of traffic per
 element against ~4 for a fused kernel). Against what PyTorch already ships, the
-real gain is **1.0×–1.2×**.
+real gain is **1.0×–1.2×**, and it is a coin flip per shape.
 
 **The right column is the actual finding.** No single kernel wins everywhere.
 
@@ -138,34 +141,45 @@ real gain is **1.0×–1.2×**.
 
 | Strategy | Median | Geometric mean | **Worst case** |
 |----------|-------:|---------------:|---------------:|
-| always Triton | 1.00× | 1.04× | **1.55×** |
-| always `torch.compile` | 1.04× | 1.09× | **2.50×** |
-| always `F.rms_norm` | 6.65× | 5.66× | 8.81× |
+| RMSNorm: always Triton | 1.00× | 1.13× | **1.69×** |
+| RMSNorm: always `torch.compile` | 1.03× | 1.17× | **2.41×** |
+| RMSNorm: always `F.rms_norm` | 6.95× | 5.36× | 11.90× |
+| RoPE: always Triton | 1.00× | 1.23× | **2.10×** |
+| RoPE: always `torch.compile` | 1.23× | 1.37× | **3.35×** |
 | **select per shape** | **1.00×** | **1.00×** | **1.00×** |
 
-Ship one hand-written kernel everywhere and you take up to a 55 % penalty on some
-shapes. Trust `torch.compile` everywhere and you take up to 314 % on RoPE. The
+*(slowdown against the fastest measured kernel for each shape × dtype; 24 RMSNorm
+and 12 RoPE configs)*
+
+Ship one hand-written kernel everywhere and some shapes run up to 2.1× slower
+than they could. Trust `torch.compile` everywhere and RoPE runs up to 3.35×
+slower. The
 value is in the tail, not the median — and the dispatcher demonstrates it by
 arbitrating against itself: on the fp16 workload it selects
 `rmsnorm_residual_compiled`, the `torch.compile` baseline, over its own Triton
 kernel.
 
 And there is no shortcut rule to replace the measurement. Plotting the same
-kernel's speedup against problem size gives a cloud, not a threshold: it wins by
-2.5× at 4 MiB and loses by 35 % at 8 MiB, in the same dtype.
+kernel's speedup against problem size gives a cloud, not a threshold: in bf16 it
+runs at 1.42× the best baseline at 4 MiB and at 0.67× at 8 MiB.
 
 ![Triton speedup versus tensor size, scattered above and below parity](docs/images/shape-sensitivity.png)
 
 ### Negative results, published
 
-- **Decode is a regression**: 0.69× against a compiled stack. The selector
-  benchmarks at decode shapes and still picks Triton, so the per-call benchmark
-  disagrees with the loop. `launch_overhead_ms` is now recorded per backend to
-  settle it. Unresolved.
-- **`torch.compile` is slower than eager on our stack measurement** (10.75 ms vs
-  10.39 ms in prefill). Cause identified: Dynamo hits `cache_size_limit` on
-  `KVCache.update` and recompiles in a loop, so the compiled baseline is
-  handicapped and the 1.24× prefill figure is optimistic. Not yet fixed.
+- **Decode is a regression**: 0.65× against a compiled stack (AKO 12.23 ms vs
+  `torch.compile` 7.94 ms per step, eager 10.06 ms). The selector benchmarks at
+  decode shapes and still picks Triton, so the per-call benchmark disagrees with
+  the loop. `launch_overhead_ms` is recorded per backend, but the committed values
+  are clamped at 0 and do not settle it yet. Unresolved.
+- **Prefill gain is against a possibly handicapped baseline**: AKO 9.04 ms,
+  `torch.compile` 11.16 ms, eager 11.69 ms (1.24× vs the best). Dynamo hits
+  `cache_size_limit` on `KVCache.update` and recompiles, so the compiled baseline
+  may be slower than it should be and the 1.24× may be optimistic. Not yet fixed.
+- **Adaptive selection loses the serving simulation.** On a 64-request trace
+  (`reports/rtx3070/serving_simulation.json`) the adaptive policy takes
+  28 613 ms against 26 054 ms for plain eager (+9.8 %), and its TTFT p50 is
+  329 ms against 54 ms. Eager is the best policy on that trace.
 - **End-to-end impact is small.** The operations AKO covers are ~24 % of a decoder
   stack's time. A 1.05× on that share is ~1 % overall. This is a study and a
   harness, not a speedup.
@@ -191,10 +205,11 @@ kernel's speedup against problem size gives a cloud, not a threshold: it wins by
 The selector implements Algorithm 1 of the accompanying
 [paper](adaptive_kernel_optimizer_paper.md): cache → validate → benchmark → cache.
 
-**The tolerance is derived, never hard-coded.** `error_budget()` scales with the
-dtype's relative precision and the magnitude actually produced. Rejections are
-logged in ulps: 1 ulp is a rounding disagreement, a genuinely wrong kernel counts
-in the thousands.
+**The tolerance scales with the dtype and the data.** `error_budget()` returns
+`atol + rtol × max|reference|`, with `rtol` taken from a per-dtype table
+(`DTYPE_RTOL`). The gate compares the absolute error to that budget; the error in
+ulps is only reported in the rejection message, where 1 ulp is a rounding
+disagreement and a genuinely wrong kernel counts in the thousands.
 
 ### Testing GPU kernels without a GPU
 
@@ -206,8 +221,8 @@ the old autotune ceiling: under the previous configuration it reports an error o
 a laptop.
 
 The decoder stack is checked against `transformers`' own LLaMA implementation
-offline — the forward pass matches exactly in fp32, in prefill and in cached
-decoding, which is what pins down the RMSNorm placement, RoPE pairing and GQA
+offline — in fp32 the forward pass agrees to within 1e-5 in prefill and 1e-4
+in cached decoding (max absolute error), which is what pins down the RMSNorm placement, RoPE pairing and GQA
 conventions.
 
 ## Getting started
@@ -222,8 +237,8 @@ python scripts/check_environment.py
 ```
 
 ```bash
-pytest -q -m "not gpu"    # 107 tests, no GPU required
-pytest -q -m gpu          # 18 tests, CUDA + Triton
+pytest -q -m "not gpu"    # 167 tests, no GPU required
+pytest -q -m gpu          # 24 tests, CUDA + Triton
 ```
 
 ### Reproducing the measurements
@@ -319,8 +334,7 @@ someone else uses: registering your own kernel as a candidate and letting the
 harness prove it correct before it runs. That path exists in the code and is
 exercised by the tests, but it is not documented as a public contract yet.
 
-Known gaps: the decode regression is unexplained; the operation sweeps do not
-cover decode-sized shapes; and a single GPU has been measured, so nothing is
+Known gaps: the decode and serving regressions are unexplained; and a single GPU has been measured, so nothing is
 claimed about portability across hardware — which is precisely the claim the
 design exists to support.
 
