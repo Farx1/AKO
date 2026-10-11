@@ -207,6 +207,6 @@ def test_round_trip_1000_rows_under_a_second(tmp_path):
     elapsed = time.perf_counter() - t0
     d.close()
     assert n == 1000
-    # Typically ~0.3 s; 1.0 s failed on a loaded machine. 3 s still catches a lost
-    # WAL/synchronous=NORMAL setup (a full fsync per commit costs several seconds here).
+    # 1.0 s failed intermittently on a loaded Windows machine. 3 s tolerates that
+    # and still flags a regression of the per-commit cost (WAL + synchronous=NORMAL).
     assert elapsed < 3.0, elapsed
