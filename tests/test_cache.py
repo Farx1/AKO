@@ -46,6 +46,17 @@ def test_corrupt_file_does_not_break_dispatch(tmp_path) -> None:
     assert len(cache) == 0
 
 
+def test_corrupt_file_is_kept_aside_and_logged(tmp_path, caplog) -> None:
+    path = tmp_path / "cache.json"
+    path.write_text("{not json")
+    cache = KernelCache(path=path)
+    assert "Unreadable kernel cache" in caplog.text
+    assert (tmp_path / "cache.json.corrupt").read_text() == "{not json"
+    cache.set("GPU_A", "rmsnorm", "shape", "rmsnorm_triton")
+    assert KernelCache(path=path).get("GPU_A", "rmsnorm", "shape") == "rmsnorm_triton"
+    assert [f.name for f in tmp_path.iterdir() if f.name.endswith(".tmp")] == []
+
+
 def test_stats_track_hit_rate(tmp_path) -> None:
     cache = KernelCache(path=tmp_path / "cache.json")
     cache.set("GPU_A", "rmsnorm", "shape", "rmsnorm_ref")
