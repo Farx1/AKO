@@ -63,10 +63,14 @@ class BenchResult:
 
     @property
     def launch_overhead_ms(self) -> float | None:
-        """Wall-clock cost that is not device time."""
+        """Wall-clock cost that is not device time, or None without device timing.
+
+        Not clamped: a negative value means the two clocks disagree, which is a
+        measurement problem to see, not a zero overhead.
+        """
         if self.gpu_p50_ms is None:
             return None
-        return max(self.latency_p50_ms - self.gpu_p50_ms, 0.0)
+        return self.latency_p50_ms - self.gpu_p50_ms
 
     @property
     def _spread_samples(self) -> list[float]:
@@ -121,7 +125,7 @@ class BenchResult:
             payload["l2_flush_ms"] = round(self.l2_flush_ms, 4)
         if self.gpu_p50_ms is not None:
             payload["gpu_p50_ms"] = round(self.gpu_p50_ms, 4)
-            payload["launch_overhead_ms"] = round(self.launch_overhead_ms or 0.0, 4)
+            payload["launch_overhead_ms"] = round(self.latency_p50_ms - self.gpu_p50_ms, 4)
         if self.peak_memory_mb is not None:
             payload["peak_memory_mb"] = round(self.peak_memory_mb, 2)
         return payload

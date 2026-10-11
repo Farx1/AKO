@@ -14,7 +14,7 @@ from __future__ import annotations
 import pytest
 import torch
 
-from ako.benchmark.bench_op import MAX_INNER_ITERS, bench_op
+from ako.benchmark.bench_op import MAX_INNER_ITERS, BenchResult, bench_op
 from ako.benchmark.report import BenchmarkReport
 from ako.dispatcher.hardware import get_device_info
 from ako.dispatcher.registry import KernelRegistry
@@ -130,6 +130,13 @@ def test_cpu_results_have_no_device_timing() -> None:
     assert result.gpu_p50_ms is None
     assert result.launch_overhead_ms is None
     assert "gpu_p50_ms" not in result.to_dict()
+
+
+def test_launch_overhead_is_not_clamped() -> None:
+    # Device time above wall time is a clock disagreement; it must stay visible.
+    result = BenchResult("k", (1,), "float16", "cuda:0", 1.0, 1.0, 1.0, 0.0, [1.0], gpu_p50_ms=1.25)
+    assert result.launch_overhead_ms == pytest.approx(-0.25)
+    assert result.to_dict()["launch_overhead_ms"] == pytest.approx(-0.25)
 
 
 def test_comparison_reports_speedup_against_the_best_baseline() -> None:

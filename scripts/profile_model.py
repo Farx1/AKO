@@ -61,13 +61,18 @@ def _top_ops(model, x: torch.Tensor, limit: int = 10) -> list[dict[str, Any]]:
     """Top operators by self time, as reported by the PyTorch profiler."""
     with torch.inference_mode(), profile_cuda() as prof:
         model(x)
-    key = "self_cuda_time_total" if torch.cuda.is_available() else "self_cpu_time_total"
-    rows = sorted(prof.key_averages(), key=lambda e: getattr(e, key, 0), reverse=True)
+    events = prof.key_averages()
+    key = "self_cpu_time_total"
+    if torch.cuda.is_available():
+        # torch >= 2.4 renamed the field; reading the old name returns the getattr default.
+        has_device = bool(events) and hasattr(events[0], "self_device_time_total")
+        key = "self_device_time_total" if has_device else "self_cuda_time_total"
+    rows = sorted(events, key=lambda e: getattr(e, key, 0), reverse=True)
     return [
         {
             "name": row.key,
             "count": row.count,
-            "self_time_us": round(getattr(row, key, 0) / 1000, 3),
+            "self_time_us": round(getattr(row, key, 0), 3),  # profiler totals are in us
         }
         for row in rows[:limit]
     ]
@@ -169,7 +174,8 @@ def main() -> None:
         for backend, res in results.items():
             if res.gpu_p50_ms is not None:
                 row[f"{backend}_gpu_ms"] = round(res.gpu_p50_ms, 4)
-                row[f"{backend}_launch_overhead_ms"] = round(res.launch_overhead_ms or 0.0, 4)
+                overhead = res.launch_overhead_ms
+                row[f"{backend}_launch_overhead_ms"] = None if overhead is None else round(overhead, 4)
         row["speedup"] = round(latencies["torch"] / ako_ms, 3) if ako_ms else 0.0
         row["best_baseline"] = best_baseline
         row["speedup_vs_best_baseline"] = (
