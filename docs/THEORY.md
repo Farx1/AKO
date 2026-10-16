@@ -60,7 +60,7 @@ Error of the fp32 part, counting roundings:
   operation). $(1+\theta)^{-1/2}$ halves the relative error to first order.
 - two multiplications ($x \cdot r$, then $\cdot\, w$).
 
-$$\delta_{32}(n) = (1-\gamma_{n+2})^{-1/2}(1+u_{32})^{6} - 1
+$$\delta_{32}(n) = (1-\gamma_{n+2})^{-1/2}(1+u_{32})^{4} - 1
 \;\approx\; \tfrac12 (n+2)\,u_{32} + 4u_{32} .$$
 
 After the final rounding to the output format with roundoff $u$,
