@@ -93,7 +93,7 @@ def test_rmsnorm_ref_within_derived_bound(n: int, dtype: torch.dtype, seed: int)
     w = (1 + 0.1 * _randn(n, seed=seed + 1)).to(dtype)
     exact = _rmsnorm64(x, w)
     u = UNIT_ROUNDOFF[dtype]
-    delta32 = (1 - gamma(n + 2)) ** -0.5 * (1 + U32) ** 6 - 1
+    delta32 = (1 - gamma(n + 2)) ** -0.5 * (1 + U32) ** 4 - 1
     # Underflow: fp16 outputs below the normal range are absolute, not relative.
     eta = torch.finfo(dtype).tiny * torch.finfo(dtype).eps / 2
     bound = (u + (1 + u) * delta32) * exact.abs() + eta
@@ -141,6 +141,8 @@ def test_rope_table_error_bounded_and_grows_with_position(offset: int) -> None:
 @given(n=widths, dtype=st.sampled_from([torch.float16, torch.bfloat16]), seed=seeds)
 def test_swiglu_first_order_propagation(n: int, dtype: torch.dtype, seed: int) -> None:
     g, v = _randn(n, seed=seed) * 4, _randn(n, seed=seed + 1)
+    # Keep inputs in the normal range: subnormal rounding is absolute, not relative.
+    g, v = g.sign() * g.abs().clamp_min(1e-3), v.sign() * v.abs().clamp_min(1e-3)
     y = F.silu(g) * v
     y_hat = F.silu(g.to(dtype).double()) * v.to(dtype).double()
     kappa = (1 + g * (1 - torch.sigmoid(g))).abs()
@@ -200,7 +202,7 @@ def test_selected_kernel_always_passes_gate(tmp_path_factory, errors: list[float
         def fake(x, weight, eps=1e-6, _shift=k * budget):
             return ref + _shift
 
-        registry.register(KernelEntry("rmsnorm", f"fake{i}", fake, backend="triton", priority=5))
+        registry.register(KernelEntry("rmsnorm", f"fake{i}", fake, backend="custom", priority=5))
     selector = KernelSelector(
         registry=registry,
         cache=KernelCache(path=tmp_path_factory.mktemp("cache") / "cache.json"),
