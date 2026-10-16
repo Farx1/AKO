@@ -23,9 +23,7 @@ def parse_dtypes(raw: Sequence[str]) -> list[torch.dtype]:
     """Map CLI dtype names (``fp16``/``bf16``/``fp32``) to torch dtypes."""
     unknown = [d for d in raw if d not in DTYPE_ALIASES]
     if unknown:
-        raise ValueError(
-            f"Unknown dtype(s) {unknown}; expected one of {sorted(DTYPE_ALIASES)}"
-        )
+        raise ValueError(f"Unknown dtype(s) {unknown}; expected one of {sorted(DTYPE_ALIASES)}")
     return [DTYPE_ALIASES[d] for d in raw]
 
 
@@ -120,6 +118,9 @@ class BenchResult:
             "unstable": self.unstable,
             "l2_state": self.l2_state,
             "graph_captured": self.graph_captured,
+            # Raw per-call samples, so an interval can be recomputed offline
+            # (scripts/speedup_ci.py) instead of trusting a single p50.
+            "samples_ms": [round(v, 5) for v in self.samples_ms],
         }
         if self.l2_flush_ms:
             payload["l2_flush_ms"] = round(self.l2_flush_ms, 4)
@@ -169,8 +170,13 @@ def _flush_cost_ms(device: torch.device) -> tuple[float, float]:
     """
     buffer = _flush_buffer(device)
     result = bench_op(
-        lambda b: b.zero_(), (buffer,),
-        warmup=5, repeats=20, inner=10, flush_l2=False, kernel_name="l2_flush",
+        lambda b: b.zero_(),
+        (buffer,),
+        warmup=5,
+        repeats=20,
+        inner=10,
+        flush_l2=False,
+        kernel_name="l2_flush",
     )
     return result.latency_p50_ms, result.gpu_p50_ms or 0.0
 
@@ -345,6 +351,35 @@ def bootstrap_ci(
     medians = [statistics.median(rng.choices(pool, k=len(pool))) for _ in range(resamples)]
     tail = (1.0 - confidence) / 2
     return (_percentile(medians, tail), _percentile(medians, 1.0 - tail))
+
+
+def bootstrap_ratio_ci(
+    numerator: Sequence[float],
+    denominator: Sequence[float],
+    *,
+    seed: int = 0,
+    resamples: int = 2000,
+    confidence: float = 0.95,
+) -> tuple[float, float, float]:
+    """Ratio of medians ``med(numerator) / med(denominator)`` and its interval.
+
+    For two *independent* sample sets (two kernels measured in one sweep, not in
+    alternation): each side is resampled separately, percentile bootstrap,
+    seeded. Returns ``(ratio, low, high)``; the difference is significant only
+    when ``[low, high]`` excludes 1.
+    """
+    if not numerator or not denominator:
+        raise ValueError("both sample sets must be non-empty")
+    rng = random.Random(seed)
+    num, den = list(numerator), list(denominator)
+    ratios = sorted(
+        statistics.median(rng.choices(num, k=len(num)))
+        / statistics.median(rng.choices(den, k=len(den)))
+        for _ in range(resamples)
+    )
+    tail = (1.0 - confidence) / 2
+    point = statistics.median(num) / statistics.median(den)
+    return point, _percentile(ratios, tail), _percentile(ratios, 1.0 - tail)
 
 
 def compare_paired(

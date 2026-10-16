@@ -358,3 +358,37 @@ tar czf ako-campaign-$(date +%F).tar.gz reports/rtx3070
 
 If only one file can travel, send `reports/rtx3070/campaign.json`: it carries the six headline
 numbers, the per-step status and the error message of anything that failed.
+
+---
+
+## 9. How a number becomes a claim
+
+What each timing is, and when a speedup counts.
+
+- **Warmup**: `warmup` untimed calls per kernel and shape (10 by default in
+  `bench_op`) before any sample, so compilation, autotuning and allocator
+  growth stay out of the samples.
+- **Timing**: calls are timed in batches of ~1 ms (`TARGET_BATCH_MS`), with
+  wall clock around the batch and CUDA events inside it. One sample is the
+  batch time divided by the number of calls. The L2 is flushed before every
+  call and the calibrated flush cost is subtracted (`l2_state` in the JSON).
+- **Samples**: every row of a sweep report now carries `samples_ms`, the raw
+  per-call samples, next to `median_ms`, `p25_ms`, `p75_ms` and `iqr_ms`.
+- **Interval**: `python scripts/speedup_ci.py <report.json>` recomputes each
+  speedup as `median(best baseline) / median(candidate)` with a seeded
+  percentile bootstrap (2000 resamples, the two sides resampled
+  independently). A speedup is called significant only when its 95 % interval
+  excludes 1. Paired experiments (`compare_paired`) use the median of per-pair
+  ratios instead, measured in alternation.
+- **Clocks**: `scripts/run_campaign.py` and `scripts/noise_floor.py` sample SM
+  clock, temperature, power and throttle reasons through `nvidia-smi`
+  (`ako/benchmark/env.py`). Read them before trusting a sweep.
+- **Seeds**: inputs come from `torch.randn` under the default generator unless
+  a script seeds its own (`torch.Generator().manual_seed(k)`); the bootstrap is
+  seeded (`--seed`, default 0).
+
+Not done yet: one sweep is one process. Run-to-run variance across processes
+(reboot, clock state) is not in the interval. To include it, run the sweep in
+three separate processes and pool the per-run medians. The reports committed
+under `reports/rtx3070/` predate `samples_ms`, so `speedup_ci.py` prints `n/a`
+for them rather than an invented interval.

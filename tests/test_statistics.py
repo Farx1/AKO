@@ -13,6 +13,7 @@ from ako.benchmark.bench_op import (
     BenchResult,
     bench_op,
     bootstrap_ci,
+    bootstrap_ratio_ci,
     compare_paired,
 )
 from ako.ops.rmsnorm_ref import rmsnorm_ref
@@ -43,9 +44,7 @@ def _result(run_p50s: tuple[float, ...]) -> BenchResult:
 
 def test_bootstrap_ci_contains_true_ratio() -> None:
     rng = random.Random(1234)
-    ratios = [
-        _fake_measure(rng, TRUE_RATIO) / _fake_measure(rng, 1.0) for _ in range(30)
-    ]
+    ratios = [_fake_measure(rng, TRUE_RATIO) / _fake_measure(rng, 1.0) for _ in range(30)]
     low, high = bootstrap_ci(ratios, seed=0)
     assert low < TRUE_RATIO < high
     assert low > 1.0  # a real 40% difference is detected as significant
@@ -95,10 +94,49 @@ def test_bench_op_runs_are_independent_and_default_is_unchanged() -> None:
 def test_compare_paired_reports_bracketed_interval() -> None:
     x = torch.randn(2, 16, 32)
     weight = torch.ones(32)
-    out = compare_paired(
-        rmsnorm_ref, rmsnorm_ref, (x, weight), pairs=3, warmup=1, repeats=3
-    )
+    out = compare_paired(rmsnorm_ref, rmsnorm_ref, (x, weight), pairs=3, warmup=1, repeats=3)
     low, high = out["speedup_ci95"]
     assert out["pairs"] == 3
     assert low <= out["speedup_median"] <= high
     assert isinstance(out["significant"], bool)
+
+
+def test_bootstrap_ratio_ci_separates_known_ratio_from_parity() -> None:
+    rng = random.Random(1)
+    slow = [_fake_measure(rng, 1.4) for _ in range(40)]
+    fast = [_fake_measure(rng, 1.0) for _ in range(40)]
+    ratio, low, high = bootstrap_ratio_ci(slow, fast)
+    assert 1.0 < low <= ratio <= high
+    assert low <= TRUE_RATIO <= high * 1.05
+
+    _, low, high = bootstrap_ratio_ci(fast, list(reversed(fast)))
+    assert low <= 1.0 <= high  # same samples: never significant
+
+
+def test_speedup_ci_script_uses_raw_samples_and_never_invents_one() -> None:
+    from scripts.speedup_ci import speedup_rows
+
+    rng = random.Random(2)
+    row = {"shape": [1, 8], "dtype": "float16"}
+    report = {
+        "results": [
+            {
+                **row,
+                "kernel_name": "base",
+                "samples_ms": [_fake_measure(rng, 2.0) for _ in range(30)],
+            },
+            {
+                **row,
+                "kernel_name": "cand",
+                "samples_ms": [_fake_measure(rng, 1.0) for _ in range(30)],
+            },
+        ],
+        "comparisons": [{**row, "selected_kernel": "cand", "best_baseline_kernel": "base"}],
+    }
+    (out,) = speedup_rows(report)
+    assert out["significant"] is True and out["ci95"][0] > 1.0
+
+    for r in report["results"]:
+        del r["samples_ms"]  # an old report: no interval, not a made-up one
+    (out,) = speedup_rows(report)
+    assert out["ci95"] is None and out["significant"] is None
