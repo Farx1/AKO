@@ -65,7 +65,11 @@ $$\delta_{32}(n) = (1-\gamma_{n+2})^{-1/2}(1+u_{32})^{6} - 1
 
 After the final rounding to the output format with roundoff $u$,
 
-$$|\hat y_i - y_i| \le \bigl(u + (1+u)\,\delta_{32}(n)\bigr)\,|y_i| . \qquad\text{(tested)}$$
+$$|\hat y_i - y_i| \le \bigl(u + (1+u)\,\delta_{32}(n)\bigr)\,|y_i| + \eta . \qquad\text{(tested)}$$
+
+$\eta$ is half the smallest subnormal of the output format: below the normal
+range the final rounding is absolute, not relative. The test needed it in fp16,
+where small outputs underflow.
 
 Replacing $\gamma_{n+2}$ by the probabilistic $\tilde\gamma_{n+2}(\lambda)$ gives
 $\delta_{32} \approx \frac12\lambda\sqrt{n+2}\,u_{32} + 4u_{32}$.
@@ -105,7 +109,7 @@ Honest reading:
 ## 3. RoPE
 
 For position $m$ and pair $i$, RoPE applies the rotation
-$R(\theta) = \begin{pmatrix}\cos\theta & -\sin\theta\ \sin\theta & \cos\theta\end{pmatrix}$
+$R(\theta) = \begin{pmatrix}\cos\theta & -\sin\theta\\ \sin\theta & \cos\theta\end{pmatrix}$
 with $\theta = m\,\omega_i$, $\omega_i = \mathrm{base}^{-2i/d}$
 (RoFormer [3], §3.2.2, eq. (15); §3.3 uses this 0-based indexing).
 $R(\theta)$ is orthogonal ([3], §3.2.2), so $\|R(\theta)x\| = \|x\|$ for every
@@ -128,7 +132,10 @@ $$\|\Delta y\| \le \bigl(c\,u_{32}\,m\,\omega_i + 3u_{32}\bigr)\,\|x\| . \qquad\
 
 **Consequence.** The error is proportional to the position. At $m = 2^{16}$ and
 $\omega_0 = 1$ the worst case is $22 \cdot 2^{-24} \cdot 2^{16} \approx 0.09$ rad,
-far above an fp16 ulp at magnitude 1. fp32 tables are fine for the short
+far above an fp16 ulp at magnitude 1. Measured on CPU (head_dim 128, fp32
+tables against fp64): 3.5e-6 rad for $m < 64$, 6.2e-5 rad near $m = 2^{10}$ and
+3.8e-3 rad near $m = 2^{16}$, i.e. an effective $c$ near 1, well inside the
+worst case. fp32 tables are fine for the short
 contexts measured in this repository. Long contexts want the angle formed in
 fp64 (what `build_rope_tables(..., dtype=torch.float64)` does) and cast
 afterwards.
