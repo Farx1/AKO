@@ -24,7 +24,7 @@ from ako.benchmark.bench_op import bootstrap_ratio_ci
 
 def _key(row: dict[str, Any], kernel: str) -> tuple[Any, ...]:
     # One RoPE style per report file, so (kernel, shape, dtype) is unique.
-    return (kernel, tuple(row["shape"]), row["dtype"])
+    return (kernel, tuple(row["shape"]), row.get("dtype"))
 
 
 def speedup_rows(report: dict[str, Any], *, seed: int = 0) -> list[dict[str, Any]]:
@@ -32,18 +32,19 @@ def speedup_rows(report: dict[str, Any], *, seed: int = 0) -> list[dict[str, Any
     rows = []
     for comp in report.get("comparisons", []):
         cand = samples.get(_key(comp, comp["selected_kernel"]))
-        base = samples.get(_key(comp, comp["best_baseline_kernel"]))
+        # dtype / best_baseline_kernel are optional in older reports: no interval then.
+        base = samples.get(_key(comp, comp.get("best_baseline_kernel")))
         row = {
             "shape": comp["shape"],
-            "dtype": comp["dtype"],
+            "dtype": comp.get("dtype"),
             "candidate": comp["selected_kernel"],
-            "baseline": comp["best_baseline_kernel"],
+            "baseline": comp.get("best_baseline_kernel"),
             "speedup_p50": comp.get("speedup_vs_best_baseline"),
             "speedup_median": None,
             "ci95": None,
             "significant": None,
         }
-        if cand and base:
+        if cand and base and min(cand) > 0:
             ratio, low, high = bootstrap_ratio_ci(base, cand, seed=seed)
             row.update(
                 speedup_median=round(ratio, 4),
@@ -65,7 +66,7 @@ def main() -> None:
     for r in rows:
         ci = "n/a (no raw samples)" if r["ci95"] is None else f"[{r['ci95'][0]}, {r['ci95'][1]}]"
         sig = {True: "significant", False: "not significant", None: ""}[r["significant"]]
-        print(f"{str(r['shape']):>18} {r['dtype']:>8} {r['speedup_p50']!s:>7}  {ci}  {sig}")
+        print(f"{str(r['shape']):>18} {r['dtype']!s:>8} {r['speedup_p50']!s:>7}  {ci}  {sig}")
     if args.output:
         args.output.write_text(json.dumps(rows, indent=2) + "\n")
 

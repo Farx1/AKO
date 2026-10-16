@@ -120,7 +120,7 @@ class BenchResult:
             "graph_captured": self.graph_captured,
             # Raw per-call samples, so an interval can be recomputed offline
             # (scripts/speedup_ci.py) instead of trusting a single p50.
-            "samples_ms": [round(v, 5) for v in self.samples_ms],
+            "samples_ms": [round(v, 7) for v in self.samples_ms],
         }
         if self.l2_flush_ms:
             payload["l2_flush_ms"] = round(self.l2_flush_ms, 4)
@@ -370,6 +370,8 @@ def bootstrap_ratio_ci(
     """
     if not numerator or not denominator:
         raise ValueError("both sample sets must be non-empty")
+    if min(denominator) <= 0:
+        raise ValueError("denominator samples must be positive")
     rng = random.Random(seed)
     num, den = list(numerator), list(denominator)
     ratios = sorted(
