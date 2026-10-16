@@ -32,7 +32,9 @@ jobs:
       # so formatting lands file by file instead of in one unreviewable diff.
       - name: pre-commit (changed files)
         if: github.event_name == 'pull_request'
-        run: pre-commit run --show-diff-on-failure --from-ref "origin/${{ github.base_ref }}" --to-ref HEAD
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: pre-commit run --show-diff-on-failure --from-ref "origin/$BASE_REF" --to-ref HEAD
 
       - name: ruff (whole tree, errors only)
         run: pre-commit run ruff-check --all-files

@@ -5,7 +5,7 @@
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install torch --index-url https://download.pytorch.org/whl/cpu   # or a CUDA build
-pip install -e ".[dev,hf]"
+pip install -e ".[dev,hf,ci]"
 pre-commit install
 ```
 
