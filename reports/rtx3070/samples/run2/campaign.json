@@ -1,0 +1,77 @@
+{
+  "created_at": "2026-10-16T21:18:49.763793+00:00",
+  "mode": "full",
+  "device": "cuda",
+  "dtypes": [
+    "fp16",
+    "bf16"
+  ],
+  "repeats": 30,
+  "estimated_seconds": 1345,
+  "planned": [
+    "environment",
+    "health",
+    "rmsnorm",
+    "rope",
+    "profile"
+  ],
+  "steps": {
+    "swiglu": {
+      "status": "skipped"
+    },
+    "serving": {
+      "status": "skipped"
+    },
+    "environment": {
+      "status": "ok",
+      "seconds": 0.29,
+      "output": "environment.json",
+      "gpu": "NVIDIA GeForce RTX 3070 Laptop GPU"
+    },
+    "health": {
+      "status": "ok",
+      "seconds": 0.8,
+      "output": "health.json",
+      "probe": "rmsnorm_ref",
+      "shape": [
+        8,
+        512,
+        2048
+      ],
+      "dtype": "float16",
+      "run_p50_ms": [
+        1.30484,
+        1.19361
+      ],
+      "drift": 0.0932,
+      "tolerance": 0.1,
+      "enforced": true
+    },
+    "rmsnorm": {
+      "status": "ok",
+      "seconds": 45.65,
+      "output": "baseline_rmsnorm.json",
+      "log": "reports/rtx3070/samples/run2/logs/rmsnorm.log"
+    },
+    "rope": {
+      "status": "ok",
+      "seconds": 50.46,
+      "output": "rope_benchmark.json",
+      "log": "reports/rtx3070/samples/run2/logs/rope.log"
+    },
+    "profile": {
+      "status": "ok",
+      "seconds": 114.19,
+      "output": "model_profile.json",
+      "log": "reports/rtx3070/samples/run2/logs/profile.log"
+    }
+  },
+  "summary": {
+    "rmsnorm_decode_speedup_vs_best_baseline": 1.309,
+    "rmsnorm_prefill_speedup_vs_best_baseline": 1.02,
+    "rope_speedup_vs_best_baseline": 1.352,
+    "swiglu_speedup_vs_best_baseline": null,
+    "decode_end_to_end_speedup_vs_best_baseline": 0.305,
+    "adaptive_vs_best_fixed_policy": null
+  }
+}

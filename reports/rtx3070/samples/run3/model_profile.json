@@ -1,0 +1,121 @@
+{
+  "model_id": "random-weights",
+  "model": {
+    "hidden_dim": 2048,
+    "n_layers": 4,
+    "n_heads": 32,
+    "n_kv_heads": 4,
+    "intermediate_dim": 5632,
+    "max_seq_len": 512,
+    "rope_base": 10000.0,
+    "rope_style": "neox",
+    "eps": 1e-05
+  },
+  "device": {
+    "device_type": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+    "device_index": 0,
+    "cuda_capability": [
+      8,
+      6
+    ],
+    "total_memory_gb": 8.0,
+    "driver_version": "581.83",
+    "gpu_vendor": "nvidia",
+    "compute_backend": "cuda",
+    "sm_count": 40,
+    "smem_per_block": 101376,
+    "l2_bytes": 4194304,
+    "regs_per_sm": 65536
+  },
+  "parameters": {
+    "batch_size": 1,
+    "seq_len": 512,
+    "dtype": "float16",
+    "warmup": 5,
+    "repeats": 30
+  },
+  "max_abs_error": 0.005859375,
+  "measurements": {
+    "prefill": {
+      "torch_ms": 29.4938,
+      "ako_ms": 23.4448,
+      "torch_compile_ms": 19.6117,
+      "torch_gpu_ms": 27.9253,
+      "torch_launch_overhead_ms": 1.5685,
+      "ako_gpu_ms": 23.1258,
+      "ako_launch_overhead_ms": 0.319,
+      "torch_compile_gpu_ms": 19.3391,
+      "torch_compile_launch_overhead_ms": 0.2726,
+      "speedup": 1.258,
+      "best_baseline": "torch_compile",
+      "speedup_vs_best_baseline": 0.837
+    },
+    "decode": {
+      "torch_ms": 24.9613,
+      "ako_ms": 22.961,
+      "torch_compile_ms": 21.0519,
+      "torch_gpu_ms": 24.9004,
+      "torch_launch_overhead_ms": 0.0609,
+      "ako_gpu_ms": 22.7019,
+      "ako_launch_overhead_ms": 0.2591,
+      "torch_compile_gpu_ms": 21.3338,
+      "torch_compile_launch_overhead_ms": -0.2819,
+      "speedup": 1.087,
+      "best_baseline": "torch_compile",
+      "speedup_vs_best_baseline": 0.917
+    }
+  },
+  "top_ops": [
+    {
+      "name": "aten::slice",
+      "count": 2,
+      "self_time_us": 0
+    },
+    {
+      "name": "aten::as_strided",
+      "count": 78,
+      "self_time_us": 0
+    },
+    {
+      "name": "aten::view",
+      "count": 114,
+      "self_time_us": 0
+    },
+    {
+      "name": "aten::empty_like",
+      "count": 41,
+      "self_time_us": 0
+    },
+    {
+      "name": "aten::empty_strided",
+      "count": 33,
+      "self_time_us": 0
+    },
+    {
+      "name": "cuLaunchKernel",
+      "count": 33,
+      "self_time_us": 0
+    },
+    {
+      "name": "aten::linear",
+      "count": 28,
+      "self_time_us": 0
+    },
+    {
+      "name": "aten::t",
+      "count": 28,
+      "self_time_us": 0
+    },
+    {
+      "name": "aten::transpose",
+      "count": 60,
+      "self_time_us": 0
+    },
+    {
+      "name": "aten::matmul",
+      "count": 28,
+      "self_time_us": 0
+    }
+  ]
+}

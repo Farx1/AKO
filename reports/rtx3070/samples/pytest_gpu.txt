@@ -1,0 +1,8 @@
+F.......................                                                 [100%]
+=================================== FAILURES ===================================
+E   TypeError: test_captured_and_uncaptured_matmul_agree.<locals>.mm() takes 0 positional arguments but 1 was given
+/mnt/e/claude-projects/_prs/AKO/ako/benchmark/graph.py:56: TypeError: test_captured_and_uncaptured_matmul_agree.<locals>.mm() takes 0 positional arguments but 1 was given
+=========================== short test summary info ============================
+FAILED tests/test_cuda_graph.py::test_captured_and_uncaptured_matmul_agree - ...
+1 failed, 23 passed, 180 deselected in 72.12s (0:01:12)
+pytest exit 1
