@@ -1,0 +1,209 @@
+[
+  {
+    "shape": [
+      1,
+      1,
+      32,
+      128
+    ],
+    "dtype": "float16",
+    "candidate": "rope_triton",
+    "baseline": "rope_ref",
+    "speedup_p50": 0.541,
+    "speedup_median": 2.7964,
+    "ci95": [
+      2.4116,
+      3.3706
+    ],
+    "significant": true
+  },
+  {
+    "shape": [
+      1,
+      1,
+      32,
+      128
+    ],
+    "dtype": "bfloat16",
+    "candidate": "rope_triton",
+    "baseline": "rope_compiled",
+    "speedup_p50": 1.564,
+    "speedup_median": null,
+    "ci95": null,
+    "significant": null
+  },
+  {
+    "shape": [
+      1,
+      512,
+      32,
+      128
+    ],
+    "dtype": "float16",
+    "candidate": "rope_triton",
+    "baseline": "rope_compiled",
+    "speedup_p50": 0.078,
+    "speedup_median": 0.5828,
+    "ci95": [
+      0.4655,
+      0.701
+    ],
+    "significant": true
+  },
+  {
+    "shape": [
+      1,
+      512,
+      32,
+      128
+    ],
+    "dtype": "bfloat16",
+    "candidate": "rope_triton",
+    "baseline": "rope_ref",
+    "speedup_p50": 2.768,
+    "speedup_median": 1.4996,
+    "ci95": [
+      1.1579,
+      1.7406
+    ],
+    "significant": true
+  },
+  {
+    "shape": [
+      1,
+      2048,
+      32,
+      128
+    ],
+    "dtype": "float16",
+    "candidate": "rope_triton",
+    "baseline": "rope_compiled",
+    "speedup_p50": 1.512,
+    "speedup_median": 1.3316,
+    "ci95": [
+      1.0949,
+      1.5809
+    ],
+    "significant": true
+  },
+  {
+    "shape": [
+      1,
+      2048,
+      32,
+      128
+    ],
+    "dtype": "bfloat16",
+    "candidate": "rope_triton",
+    "baseline": "rope_compiled",
+    "speedup_p50": 0.678,
+    "speedup_median": 0.8851,
+    "ci95": [
+      0.7135,
+      1.1605
+    ],
+    "significant": false
+  },
+  {
+    "shape": [
+      8,
+      1,
+      32,
+      128
+    ],
+    "dtype": "float16",
+    "candidate": "rope_triton",
+    "baseline": "rope_compiled",
+    "speedup_p50": 0.0,
+    "speedup_median": null,
+    "ci95": null,
+    "significant": null
+  },
+  {
+    "shape": [
+      8,
+      1,
+      32,
+      128
+    ],
+    "dtype": "bfloat16",
+    "candidate": "rope_triton",
+    "baseline": "rope_compiled",
+    "speedup_p50": 0.139,
+    "speedup_median": null,
+    "ci95": null,
+    "significant": null
+  },
+  {
+    "shape": [
+      8,
+      512,
+      32,
+      128
+    ],
+    "dtype": "float16",
+    "candidate": "rope_triton",
+    "baseline": "rope_compiled",
+    "speedup_p50": 1.046,
+    "speedup_median": 1.515,
+    "ci95": [
+      1.1346,
+      1.9076
+    ],
+    "significant": true
+  },
+  {
+    "shape": [
+      8,
+      512,
+      32,
+      128
+    ],
+    "dtype": "bfloat16",
+    "candidate": "rope_triton",
+    "baseline": "rope_compiled",
+    "speedup_p50": 0.414,
+    "speedup_median": 0.946,
+    "ci95": [
+      0.8263,
+      1.077
+    ],
+    "significant": false
+  },
+  {
+    "shape": [
+      8,
+      2048,
+      32,
+      128
+    ],
+    "dtype": "float16",
+    "candidate": "rope_triton",
+    "baseline": "rope_compiled",
+    "speedup_p50": 0.933,
+    "speedup_median": 0.9174,
+    "ci95": [
+      0.7882,
+      1.0164
+    ],
+    "significant": false
+  },
+  {
+    "shape": [
+      8,
+      2048,
+      32,
+      128
+    ],
+    "dtype": "bfloat16",
+    "candidate": "rope_triton",
+    "baseline": "rope_compiled",
+    "speedup_p50": 0.484,
+    "speedup_median": 0.8288,
+    "ci95": [
+      0.741,
+      0.9743
+    ],
+    "significant": true
+  }
+]

@@ -116,14 +116,41 @@ Full campaign in [`docs/RESULTS.md`](docs/RESULTS.md), raw JSON in
 `rms_norm`, and `torch.compile`. RoPE has no fused primitive in PyTorch, so
 `torch.compile` is its only honest baseline.
 
-| Operation | vs unfused reference | **vs best baseline** | Triton loses on |
-|-----------|---------------------:|---------------------:|-----------------|
-| RMSNorm fp16 | 7.30× | **1.07×** | 8 / 36 shapes |
-| RMSNorm bf16 | 6.95× | **1.03×** | 14 / 36 shapes |
-| RoPE fp16 | 5.31× | **1.17×** | 1 / 8 shapes |
-| RoPE bf16 | 5.40× | **1.07×** | 3 / 8 shapes |
+**Speedup of the Triton kernel over the best baseline, with 95 % intervals**
+(campaign of 2026-10-16: 5 fresh processes per sweep, raw samples pooled,
+seeded percentile bootstrap, `python scripts/speedup_ci.py
+reports/rtx3070/samples/run*/baseline_rmsnorm.json`; raw JSON, clock log and
+environment in [`reports/rtx3070/samples/`](reports/rtx3070/samples/)). A
+configuration counts as a gain or a loss only when its interval excludes 1.
 
-*(medians; the best baseline is almost always `torch.compile`)*
+| Operation | Median speedup vs best baseline¹ | Significant gain | Significant loss | Not significant | No interval |
+|-----------|-------------------------------:|-----------------:|-----------------:|----------------:|------------:|
+| RMSNorm fp16 | **1.14×** | 5 / 12 | 0 / 12 | 7 / 12 | 0 |
+| RMSNorm bf16 | **1.14×** | 5 / 12 | 0 / 12 | 7 / 12 | 0 |
+| RoPE fp16 | **1.33×** | 3 / 6 | 1 / 6 | 1 / 6 | 1 |
+| RoPE bf16 | **0.92×** | 1 / 6 | 1 / 6 | 2 / 6 | 2 |
+
+¹ Median over the configs that have an interval (RoPE: 5 fp16, 4 bf16).
+
+Per-configuration rows (median and interval for each of the 24 RMSNorm and 12
+RoPE shape × dtype configs) are in `reports/rtx3070/samples/speedup_ci_*.txt`.
+The best baseline is re-picked on the pooled medians: `torch.compile` for 23 of
+24 RMSNorm configs, `torch.compile` or the unfused reference for RoPE.
+
+How far to trust this: the clocks could not be locked (`nvidia-smi
+--lock-gpu-clocks` needs administrator rights on this laptop), the SM clock
+logged during the runs has a median of 727 MHz and swings between 210 and
+1800 MHz, the health gate aborted 5 of 10 attempts before a run passed it, and
+the per-call coefficient of variation has a median of 0.54. Most intervals are
+therefore wide, and most configurations are not significant either way. Three
+RoPE configs have no interval because a sample came out at 0 ms after the L2
+flush cost was subtracted. The end-to-end decoder (`model_profile.json`, no raw
+samples stored) varies from 0.31× to 1.33× of the best baseline in decode
+across the five runs (median 0.91×) and from 0.52× to 1.29× in prefill (median
+0.97×): no claim either way.
+
+The figures and the strategy table below come from the earlier single-process
+campaign in `reports/rtx3070/*.json` (point medians, no intervals).
 
 ![Speedup against the unfused reference versus against the best baseline](docs/images/baseline-gap.png)
 
@@ -339,6 +366,21 @@ short paper on adaptive kernel selection ([`adaptive_kernel_optimizer_paper.md`]
 
 - Portfolio: https://julesbarth-myportfolio.fr
 - LinkedIn: https://www.linkedin.com/in/jules-barth
+
+## Citation
+
+If you use AKO, cite it with the metadata in [`CITATION.cff`](CITATION.cff) (added by PR #9)
+(GitHub's "Cite this repository" button reads it):
+
+```bibtex
+@software{barth_ako,
+  author  = {Barth, Jules},
+  title   = {{AKO: Adaptive Kernel Optimizer}},
+  version = {0.2.0},
+  url     = {https://github.com/Farx1/AKO},
+  license = {MIT}
+}
+```
 
 ## License
 

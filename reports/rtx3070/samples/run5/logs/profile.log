@@ -1,0 +1,18 @@
+Backend agreement: max_abs_error = 5.859e-03
+               Decoder stack — PyTorch baselines vs AKO dispatch                
+┏━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
+┃         ┃            ┃          ┃ torch_compile  ┃          ┃ vs best        ┃
+┃ Pass    ┃ torch (ms) ┃ ako (ms) ┃ (ms)           ┃ vs eager ┃ baseline       ┃
+┡━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
+│ prefill │ 23.0867    │ 16.0878  │ 16.2404        │ 1.44x    │ 1.01x          │
+│         │            │          │                │          │ (torch_compil… │
+│ decode  │ 20.0335    │ 18.5657  │ 16.463         │ 1.08x    │ 0.89x          │
+│         │            │          │                │          │ (torch_compil… │
+└─────────┴────────────┴──────────┴────────────────┴──────────┴────────────────┘
+
+Profile written to reports/rtx3070/samples/run5/model_profile.json
+W1016 23:41:13.032000 2434 site-packages/torch/_dynamo/convert_frame.py:906] [11/8] torch._dynamo hit config.cache_size_limit (8)
+W1016 23:41:13.032000 2434 site-packages/torch/_dynamo/convert_frame.py:906] [11/8]    function: 'update' (/mnt/e/claude-projects/_prs/AKO/ako/models/decoder.py:84)
+W1016 23:41:13.032000 2434 site-packages/torch/_dynamo/convert_frame.py:906] [11/8]    last reason: 11/0: ___check_obj_id(L['self'].entries[0], 94149976012096)       
+W1016 23:41:13.032000 2434 site-packages/torch/_dynamo/convert_frame.py:906] [11/8] To log all recompilation reasons, use TORCH_LOGS="recompiles".
+W1016 23:41:13.032000 2434 site-packages/torch/_dynamo/convert_frame.py:906] [11/8] To diagnose recompilation issues, see https://pytorch.org/docs/main/torch.compiler_troubleshooting.html.

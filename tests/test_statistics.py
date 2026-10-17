@@ -136,6 +136,11 @@ def test_speedup_ci_script_uses_raw_samples_and_never_invents_one() -> None:
     (out,) = speedup_rows(report)
     assert out["significant"] is True and out["ci95"][0] > 1.0
 
+    # A second run where another baseline is faster: pooled, the pick follows the data.
+    rerun = {"results": [{**row, "kernel_name": "fast_base", "samples_ms": [0.5] * 30}]}
+    (out,) = speedup_rows(report, rerun)
+    assert out["baseline"] == "fast_base" and out["ci95"][1] < 1.0
+
     for r in report["results"]:
         del r["samples_ms"]  # an old report: no interval, not a made-up one
     (out,) = speedup_rows(report)
