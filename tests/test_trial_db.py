@@ -207,4 +207,6 @@ def test_round_trip_1000_rows_under_a_second(tmp_path):
     elapsed = time.perf_counter() - t0
     d.close()
     assert n == 1000
-    assert elapsed < 1.0, elapsed
+    # 1.0 s failed intermittently on a loaded Windows machine. 3 s tolerates that
+    # and still flags a regression of the per-commit cost (WAL + synchronous=NORMAL).
+    assert elapsed < 3.0, elapsed

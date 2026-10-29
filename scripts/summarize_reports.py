@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 from typing import Any
 
@@ -18,7 +19,8 @@ def _load(path: Path) -> Any:
 def _fmt_ms(value: float | None) -> str:
     if value is None:
         return "—"
-    return f"{value:.3f}"
+    # Round the decimal value as stored in the JSON: f"{7.9445:.3f}" gives 7.944 (binary float).
+    return str(Decimal(str(value)).quantize(Decimal("0.001"), rounding=ROUND_HALF_UP))
 
 
 def _fmt_speedup(value: float | None) -> str:
@@ -109,7 +111,7 @@ def _profile_table(data: dict[str, Any] | None) -> list[str]:
     measurements = data.get("measurements") or data
     for pass_name in ("prefill", "decode"):
         block = measurements.get(pass_name) or {}
-        best = block.get("best_baseline")
+        best = (block.get("best_baseline") or "").replace("_", ".")
         vs_best = _fmt_speedup(_as_float(block.get("speedup_vs_best_baseline")))
         lines.append(
             f"| {pass_name} | {_fmt_ms(_as_float(block.get('torch_ms')))} | "
@@ -119,6 +121,37 @@ def _profile_table(data: dict[str, Any] | None) -> list[str]:
             f"{vs_best}{f' ({best})' if best else ''} |"
         )
     return lines
+
+
+def _profile_config_table(data: dict[str, Any] | None) -> list[str]:
+    """Decoder configuration behind the profile, each value traced to its source."""
+    if not data:
+        return []
+    src = "`reports/rtx3070/model_profile.json`"
+    model = data.get("model") or {}
+    params = data.get("parameters") or {}
+    model_id = data.get("model_id")
+    weights = "random (`random-weights`)" if model_id == "random-weights" else f"`{model_id}`"
+    seq_len = params.get("seq_len")
+    # Decode step from scripts/profile_model.py `_bench_stack`: cache filled with x[:, :-1].
+    cached = seq_len - 1 if isinstance(seq_len, int) else "?"
+    return [
+        "Decoder configuration used for this profile:",
+        "",
+        "| Parameter | Value | Source |",
+        "|-----------|-------|--------|",
+        f"| Weights | {weights} | {src} `model_id` |",
+        f"| Layers | {model.get('n_layers')} | {src} `model.n_layers` |",
+        f"| Hidden size | {model.get('hidden_dim')} | {src} `model.hidden_dim` |",
+        f"| Prompt length (prefill) | {seq_len} tokens | {src} `parameters.seq_len` |",
+        f"| Batch size | {params.get('batch_size')} | {src} `parameters.batch_size` |",
+        f"| dtype | {params.get('dtype')} | {src} `parameters.dtype` |",
+        f"| Decode | 1 token per timed step, KV cache holding {cached} tokens "
+        "| `scripts/profile_model.py` `_bench_stack` |",
+        f"| Warmup / repeats | {params.get('warmup')} / {params.get('repeats')} "
+        f"| {src} `parameters.warmup`, `parameters.repeats` |",
+        "",
+    ]
 
 
 def _simulation_table(data: dict[str, Any] | None) -> list[str]:
@@ -271,6 +304,7 @@ def build_markdown(report_dir: Path) -> str:
             "",
             "## End-to-end decoder profile",
             "",
+            *_profile_config_table(profile if isinstance(profile, dict) else None),
             *_profile_table(profile if isinstance(profile, dict) else None),
             "",
             "## GPU tests",
