@@ -95,17 +95,17 @@ CUDA pipeline available — run: pytest -q
 | `(1, 1, 4096)` | bfloat16 | 0.222 | 0.112 | 1.99× | 0.00e+00 |
 | `(1, 512, 2048)` | float16 | 0.473 | 0.061 | 7.71× | 1.95e-03 |
 | `(1, 512, 2048)` | bfloat16 | 0.269 | 0.043 | 6.21× | 0.00e+00 |
-| `(1, 512, 4096)` | float16 | 0.394 | 0.181 | 2.17× | 9.77e-04 |
+| `(1, 512, 4096)` | float16 | 0.394 | 0.182 | 2.17× | 9.77e-04 |
 | `(1, 512, 4096)` | bfloat16 | 0.593 | 0.063 | 9.41× | 0.00e+00 |
 | `(1, 2048, 2048)` | float16 | 0.846 | 0.125 | 6.79× | 1.95e-03 |
 | `(1, 2048, 2048)` | bfloat16 | 0.560 | 0.109 | 5.12× | 7.81e-03 |
 | `(1, 2048, 4096)` | float16 | 1.047 | 0.145 | 7.24× | 1.95e-03 |
 | `(1, 2048, 4096)` | bfloat16 | 1.119 | 0.089 | 12.57× | 0.00e+00 |
-| `(8, 1, 2048)` | float16 | 0.173 | 0.279 | 0.62× | 4.88e-04 |
+| `(8, 1, 2048)` | float16 | 0.174 | 0.279 | 0.62× | 4.88e-04 |
 | `(8, 1, 2048)` | bfloat16 | 0.836 | 0.148 | 5.64× | 0.00e+00 |
 | `(8, 1, 4096)` | float16 | 0.452 | 0.101 | 4.47× | 0.00e+00 |
 | `(8, 1, 4096)` | bfloat16 | 0.233 | 0.126 | 1.84× | 0.00e+00 |
-| `(8, 512, 2048)` | float16 | 1.113 | 0.102 | 10.92× | 1.95e-03 |
+| `(8, 512, 2048)` | float16 | 1.114 | 0.102 | 10.92× | 1.95e-03 |
 | `(8, 512, 2048)` | bfloat16 | 1.015 | 0.093 | 10.87× | 7.81e-03 |
 | `(8, 512, 4096)` | float16 | 2.084 | 0.193 | 10.82× | 1.95e-03 |
 | `(8, 512, 4096)` | bfloat16 | 2.061 | 0.190 | 10.82× | 7.81e-03 |
@@ -118,12 +118,12 @@ CUDA pipeline available — run: pytest -q
 
 | Shape | Dtype | Baseline p50 (ms) | Triton p50 (ms) | Speedup | Max error |
 |-------|-------|-------------------|-----------------|---------|-----------|
-| `(1, 1, 32, 128)` | float16 | 0.178 | 0.059 | 3.01× | 0.00e+00 |
+| `(1, 1, 32, 128)` | float16 | 0.179 | 0.059 | 3.01× | 0.00e+00 |
 | `(1, 1, 32, 128)` | bfloat16 | 0.221 | 0.164 | 1.35× | 0.00e+00 |
 | `(1, 512, 32, 128)` | float16 | 0.511 | 0.159 | 3.22× | 9.77e-04 |
 | `(1, 512, 32, 128)` | bfloat16 | 0.384 | 0.077 | 4.99× | 3.91e-03 |
-| `(1, 2048, 32, 128)` | float16 | 1.268 | 0.294 | 4.30× | 1.95e-03 |
-| `(1, 2048, 32, 128)` | bfloat16 | 1.227 | 0.282 | 4.34× | 7.81e-03 |
+| `(1, 2048, 32, 128)` | float16 | 1.268 | 0.295 | 4.30× | 1.95e-03 |
+| `(1, 2048, 32, 128)` | bfloat16 | 1.227 | 0.283 | 4.34× | 7.81e-03 |
 | `(8, 1, 32, 128)` | float16 | 0.256 | 0.056 | 4.56× | 0.00e+00 |
 | `(8, 1, 32, 128)` | bfloat16 | 0.256 | 0.063 | 4.08× | 0.00e+00 |
 | `(8, 512, 32, 128)` | float16 | 2.594 | 0.656 | 3.95× | 1.95e-03 |
@@ -150,10 +150,23 @@ Adaptive selection overtakes: eager never, compile at batch 0, triton at batch 0
 
 ## End-to-end decoder profile
 
+Decoder configuration used for this profile:
+
+| Parameter | Value | Source |
+|-----------|-------|--------|
+| Weights | random (`random-weights`) | `reports/rtx3070/model_profile.json` `model_id` |
+| Layers | 4 | `reports/rtx3070/model_profile.json` `model.n_layers` |
+| Hidden size | 2048 | `reports/rtx3070/model_profile.json` `model.hidden_dim` |
+| Prompt length (prefill) | 512 tokens | `reports/rtx3070/model_profile.json` `parameters.seq_len` |
+| Batch size | 1 | `reports/rtx3070/model_profile.json` `parameters.batch_size` |
+| dtype | float16 | `reports/rtx3070/model_profile.json` `parameters.dtype` |
+| Decode | 1 token per timed step, KV cache holding 511 tokens | `scripts/profile_model.py` `_bench_stack` |
+| Warmup / repeats | 5 / 30 | `reports/rtx3070/model_profile.json` `parameters.warmup`, `parameters.repeats` |
+
 | Pass | eager (ms) | torch.compile (ms) | AKO (ms) | vs eager | vs best baseline |
 |------|-----------|--------------------|----------|----------|------------------|
-| prefill | 11.692 | 11.158 | 9.038 | 1.29× | 1.24× (torch_compile) |
-| decode | 10.057 | 7.944 | 12.228 | 0.82× | 0.65× (torch_compile) |
+| prefill | 11.692 | 11.158 | 9.038 | 1.29× | 1.24× (torch.compile) |
+| decode | 10.057 | 7.945 | 12.228 | 0.82× | 0.65× (torch.compile) |
 
 ## GPU tests
 
