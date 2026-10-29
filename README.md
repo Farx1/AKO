@@ -5,6 +5,11 @@ It benchmarks candidate kernels per shape and dtype, checks numerical agreement
 on validation inputs before using them, and records why every decision was made.
 These checks are not a proof for all possible inputs.
 
+Measured on an RTX 3070 Laptop (4-layer decoder, random weights, single run):
+decoder prefill is faster than the best baseline (`torch.compile`), while decode is
+slower than `torch.compile`, a published regression. Numbers and configuration in
+[`docs/RESULTS.md`](docs/RESULTS.md).
+
 [![CI](https://github.com/Farx1/AKO/actions/workflows/ci.yml/badge.svg)](https://github.com/Farx1/AKO/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org)

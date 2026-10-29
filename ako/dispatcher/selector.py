@@ -267,9 +267,7 @@ class KernelSelector:
         )
         baseline_ms = base_result.latency_p50_ms
 
-        budget = (
-            error_budget(ref_out) if self.error_threshold is None else self.error_threshold
-        )
+        budget = error_budget(ref_out) if self.error_threshold is None else self.error_threshold
 
         best_entry = baseline
         best_latency = baseline_ms
@@ -312,7 +310,7 @@ class KernelSelector:
             if latency < best_latency and baseline_ms >= latency * self.min_speedup:
                 best_entry, best_latency, best_error = entry, latency, error
 
-        best_baseline_kernel = min(baseline_latencies, key=baseline_latencies.get)
+        best_baseline_kernel = min(baseline_latencies, key=baseline_latencies.__getitem__)
         best_baseline_ms = baseline_latencies[best_baseline_kernel]
 
         self.cache.set(
