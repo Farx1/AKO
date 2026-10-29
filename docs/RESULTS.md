@@ -195,10 +195,23 @@ cannot cover.
 
 ## End-to-end decoder profile
 
+Decoder configuration used for this profile:
+
+| Parameter | Value | Source |
+|-----------|-------|--------|
+| Weights | random (`random-weights`) | `reports/rtx3070/model_profile.json:2` |
+| Layers | 4 | `reports/rtx3070/model_profile.json:5` |
+| Hidden size | 2048 | `reports/rtx3070/model_profile.json:4` |
+| Prompt length (prefill) | 512 tokens | `reports/rtx3070/model_profile.json:33` |
+| Batch size | 1 | `reports/rtx3070/model_profile.json:32` |
+| dtype | float16 | `reports/rtx3070/model_profile.json:34` |
+| Decode | 1 token per timed step, KV cache holding 511 tokens | `scripts/profile_model.py:46-47` |
+| Warmup / repeats | 5 / 30 | `reports/rtx3070/model_profile.json:35-36` |
+
 | Pass | eager (ms) | torch.compile (ms) | AKO (ms) | vs eager | vs best baseline |
 |------|-----------|--------------------|----------|----------|------------------|
-| prefill | 10.394 | 10.749 | 8.385 | 1.24× | 1.24× (torch) |
-| decode | 9.424 | 8.785 | 12.714 | 0.74× | 0.69× (torch_compile) |
+| prefill | 11.692 | 11.158 | 9.038 | 1.29× | 1.24× (torch.compile) |
+| decode | 10.057 | 7.945 | 12.228 | 0.82× | 0.65× (torch.compile) |
 
 ## GPU tests
 
