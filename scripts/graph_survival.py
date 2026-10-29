@@ -84,7 +84,7 @@ def main() -> None:
             stats = compare_paired(
                 vendor,
                 fused,
-                (a, b, bias),
+                (a, b, bias),  # noqa: F821 - bound in the loop, deleted only after the call
                 pairs=args.pairs,
                 warmup=3,
                 repeats=args.repeats,

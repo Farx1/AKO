@@ -12,6 +12,7 @@ import dataclasses
 import itertools
 import warnings
 
+import pytest
 import torch
 
 from ako.search.blocks import BLOCKS
@@ -75,11 +76,15 @@ def test_smem_predicate_is_the_device_limit_not_a_card_model():
     assert feasible(cfg, FP16, CC86) == "smem"
     # Same config, bigger card: kept. The limit comes from DeviceCaps.
     assert feasible(cfg, FP16, CC80) is None
-    live = caps()
-    assert live.smem_per_block > 0
     if not torch.cuda.is_available():
         # CPU-only box: the explicit fallback must match the cc 8.6 fixture.
-        assert smem_limit(live) == smem_limit(CC86)
+        assert smem_limit(caps()) == smem_limit(CC86)
+
+
+@pytest.mark.gpu
+def test_live_caps_report_a_smem_limit():
+    # On CUDA, caps() raises when neither torch nor libcudart report the limit.
+    assert caps().smem_per_block > 0
 
 
 def test_register_pressure_keeps_the_128x128_family():
