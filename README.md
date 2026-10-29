@@ -218,6 +218,10 @@ The selector implements Algorithm 1 of the accompanying
 (`DTYPE_RTOL`). The gate compares the absolute error to that budget; the error in
 ulps is only reported in the rejection message, where 1 ulp is a rounding
 disagreement and a genuinely wrong kernel counts in the thousands.
+[`docs/THEORY.md`](docs/THEORY.md) derives the error bounds for RMSNorm, RoPE and
+SwiGLU from floating-point summation analysis, compares them with the coded
+`DTYPE_RTOL` table (the fp32 entry is tighter than the analysis justifies), and
+states the statistical rule used to call one kernel faster than another.
 
 ### Testing GPU kernels without a GPU
 
