@@ -38,7 +38,7 @@ Changelog = "https://github.com/Farx1/AKO/blob/main/CHANGELOG.md"
 [project.optional-dependencies]
 gpu = ["triton>=3.0"]
 hf = ["transformers>=4.40"]
-dev = ["pytest>=8.0", "matplotlib>=3.8"]
+dev = ["pytest>=8.0", "matplotlib>=3.8", "hypothesis>=6.100"]
 # Quality gates run in CI (coverage, type check, pre-commit hooks).
 ci = ["pytest-cov>=5.0", "mypy>=1.10", "pre-commit>=3.7"]
 all = ["ako[gpu,hf,dev]"]
