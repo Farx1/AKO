@@ -26,7 +26,9 @@ still readable and is upgraded in memory on load.
 
 from __future__ import annotations
 
+import contextlib
 import json
+import logging
 import os
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -35,6 +37,8 @@ from typing import Any
 
 CACHE_SCHEMA_VERSION = 2
 DEFAULT_CACHE_PATH = Path.home() / ".ako" / "kernel_cache.json"
+
+logger = logging.getLogger(__name__)
 
 
 def default_cache_path() -> Path:
@@ -85,8 +89,13 @@ class KernelCache:
             return
         try:
             raw = json.loads(self.path.read_text())
-        except (json.JSONDecodeError, OSError):
-            # A corrupt cache must never break dispatch — start fresh.
+        except (json.JSONDecodeError, OSError) as exc:
+            # A corrupt cache must never break dispatch — start fresh, but keep the
+            # old file aside so the next save does not destroy it.
+            logger.warning("Unreadable kernel cache %s (%s); starting empty", self.path, exc)
+            if isinstance(exc, json.JSONDecodeError):
+                with contextlib.suppress(OSError):
+                    os.replace(self.path, self.path.with_name(self.path.name + ".corrupt"))
             self._entries = {}
             return
         self._entries = self._migrate(raw)
@@ -101,7 +110,10 @@ class KernelCache:
     def save(self) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         payload = {"version": CACHE_SCHEMA_VERSION, "entries": self._entries}
-        self.path.write_text(json.dumps(payload, indent=2))
+        # Write then rename: a crash mid-write never leaves a truncated cache.
+        tmp = self.path.with_name(f".{self.path.name}.{os.getpid()}.tmp")
+        tmp.write_text(json.dumps(payload, indent=2))
+        os.replace(tmp, self.path)
 
     # -- lookups -------------------------------------------------------
     def get_record(self, gpu_key: str, op_name: str, shape_key: str) -> dict[str, Any] | None:
