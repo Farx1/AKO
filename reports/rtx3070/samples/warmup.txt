@@ -1,0 +1,12 @@
+AKO campaign — mode quick, device cuda, dtypes fp16 bf16, output /tmp/ako_smoke
+Steps: environment, health, rmsnorm, rope, swiglu, serving, profile
+Estimated duration: ~2 min 0 s
+
+[1/7] environment (~5s)
+  done in 0.52s
+[2/7] health (~10s)
+  health failed: bench drift 31.3% > tolerance 10% (0.6131 ms then 0.8047 ms). 
+The GPU is not stabilized or something else is using it. Close other workloads, 
+let the clocks settle, and re-run; --health-tolerance raises the bar if you 
+accept the noise.
+Aborting: fix the bench, then re-run (--resume keeps what is already measured).

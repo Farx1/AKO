@@ -1,0 +1,47 @@
+{
+  "created_at": "2026-10-16T21:34:45.681896+00:00",
+  "python": "3.12.13",
+  "torch": "2.6.0+cu124",
+  "triton": "3.2.0",
+  "cuda_available": true,
+  "cuda_runtime": "12.4",
+  "triton_usable": true,
+  "device": {
+    "device_type": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+    "device_index": 0,
+    "cuda_capability": [
+      8,
+      6
+    ],
+    "total_memory_gb": 8.0,
+    "driver_version": "581.83",
+    "gpu_vendor": "nvidia",
+    "compute_backend": "cuda",
+    "sm_count": 40,
+    "smem_per_block": 101376,
+    "l2_bytes": 4194304,
+    "regs_per_sm": 65536
+  },
+  "compile_baseline": true,
+  "nvidia_smi": {
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+        "driver_version": "581.83",
+        "clocks.max.sm": "2100",
+        "clocks.current.sm": "645",
+        "power.limit": "[N/A]",
+        "power.draw": "32.34",
+        "memory.total": "8192",
+        "temperature.gpu": "63"
+      }
+    ]
+  },
+  "cuda_device": {
+    "name": "NVIDIA GeForce RTX 3070 Laptop GPU",
+    "capability": "8.6",
+    "total_memory_gb": 8.0,
+    "multi_processor_count": 40
+  }
+}

@@ -387,8 +387,9 @@ What each timing is, and when a speedup counts.
   a script seeds its own (`torch.Generator().manual_seed(k)`); the bootstrap is
   seeded (`--seed`, default 0).
 
-Not done yet: one sweep is one process. Run-to-run variance across processes
-(reboot, clock state) is not in the interval. To include it, run the sweep in
-three separate processes and pool the per-run medians. The reports committed
-under `reports/rtx3070/` predate `samples_ms`, so `speedup_ci.py` prints `n/a`
-for them rather than an invented interval.
+Run-to-run variance: one sweep is one process, so run it in several fresh
+processes (`--output reports/rtx3070/samples/runN`) and pass all the reports to
+`speedup_ci.py`; it pools their samples and re-picks the best baseline on the
+pooled medians. `reports/rtx3070/samples/` holds such a campaign (5 runs). The
+older reports directly under `reports/rtx3070/` predate `samples_ms`, so
+`speedup_ci.py` prints `n/a` for them rather than an invented interval.

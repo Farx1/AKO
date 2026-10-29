@@ -1,0 +1,18 @@
+Backend agreement: max_abs_error = 5.859e-03
+               Decoder stack — PyTorch baselines vs AKO dispatch                
+┏━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
+┃         ┃            ┃          ┃ torch_compile  ┃          ┃ vs best        ┃
+┃ Pass    ┃ torch (ms) ┃ ako (ms) ┃ (ms)           ┃ vs eager ┃ baseline       ┃
+┡━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
+│ prefill │ 14.3599    │ 11.2194  │ 10.825         │ 1.28x    │ 0.96x          │
+│         │            │          │                │          │ (torch_compil… │
+│ decode  │ 8.0318     │ 26.3526  │ 11.8496        │ 0.30x    │ 0.30x (torch)  │
+└─────────┴────────────┴──────────┴────────────────┴──────────┴────────────────┘
+
+Profile written to reports/rtx3070/samples/run2/model_profile.json
+W1016 23:20:59.044000 1113 site-packages/torch/_inductor/utils.py:1137] [3/0_1] Not enough SMs to use max_autotune_gemm mode
+W1016 23:22:13.651000 1113 site-packages/torch/_dynamo/convert_frame.py:906] [11/8] torch._dynamo hit config.cache_size_limit (8)
+W1016 23:22:13.651000 1113 site-packages/torch/_dynamo/convert_frame.py:906] [11/8]    function: 'update' (/mnt/e/claude-projects/_prs/AKO/ako/models/decoder.py:84)
+W1016 23:22:13.651000 1113 site-packages/torch/_dynamo/convert_frame.py:906] [11/8]    last reason: 11/0: ___check_obj_id(L['self'].entries[0], 93828716893504)       
+W1016 23:22:13.651000 1113 site-packages/torch/_dynamo/convert_frame.py:906] [11/8] To log all recompilation reasons, use TORCH_LOGS="recompiles".
+W1016 23:22:13.651000 1113 site-packages/torch/_dynamo/convert_frame.py:906] [11/8] To diagnose recompilation issues, see https://pytorch.org/docs/main/torch.compiler_troubleshooting.html.

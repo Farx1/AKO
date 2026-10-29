@@ -1,0 +1,13 @@
+   [1, 1, 32, 128]  float16             rope_ref  2.7964  [2.4116, 3.3706]  significant
+   [1, 1, 32, 128] bfloat16        rope_compiled     n/a  n/a (no raw samples, or one <= 0)  
+ [1, 512, 32, 128]  float16        rope_compiled  0.5828  [0.4655, 0.701]  significant
+ [1, 512, 32, 128] bfloat16             rope_ref  1.4996  [1.1579, 1.7406]  significant
+[1, 2048, 32, 128]  float16        rope_compiled  1.3316  [1.0949, 1.5809]  significant
+[1, 2048, 32, 128] bfloat16        rope_compiled  0.8851  [0.7135, 1.1605]  not significant
+   [8, 1, 32, 128]  float16        rope_compiled     n/a  n/a (no raw samples, or one <= 0)  
+   [8, 1, 32, 128] bfloat16        rope_compiled     n/a  n/a (no raw samples, or one <= 0)  
+ [8, 512, 32, 128]  float16        rope_compiled   1.515  [1.1346, 1.9076]  significant
+ [8, 512, 32, 128] bfloat16        rope_compiled   0.946  [0.8263, 1.077]  not significant
+[8, 2048, 32, 128]  float16        rope_compiled  0.9174  [0.7882, 1.0164]  not significant
+[8, 2048, 32, 128] bfloat16        rope_compiled  0.8288  [0.741, 0.9743]  significant
+faster (CI > 1): 4, slower (CI < 1): 2, with interval: 9 / 12

@@ -1,0 +1,17 @@
+{
+  "probe": "rmsnorm_ref",
+  "shape": [
+    8,
+    512,
+    2048
+  ],
+  "dtype": "float16",
+  "run_p50_ms": [
+    1.62811,
+    1.61886
+  ],
+  "drift": 0.0057,
+  "tolerance": 0.1,
+  "healthy": true,
+  "enforced": true
+}
