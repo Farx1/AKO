@@ -20,7 +20,7 @@ from rich.table import Table
 from ako.benchmark.bench_op import bench_op, parse_dtypes
 from ako.benchmark.profiler import profile_cuda
 from ako.dispatcher.hardware import get_device_info
-from ako.models.decoder import Backend, ModelConfig, build_stack
+from ako.models.decoder import ModelConfig, build_stack
 from ako.models.loader import load_hf_stacks
 from ako.ops.rmsnorm_torch import is_compile_enabled
 from ako.validation.numerical import max_abs_error
@@ -28,9 +28,7 @@ from ako.validation.numerical import max_abs_error
 console = Console()
 
 
-def _bench_stack(
-    model, x: torch.Tensor, *, use_cache: bool, warmup: int, repeats: int, name: str
-):
+def _bench_stack(model, x: torch.Tensor, *, use_cache: bool, warmup: int, repeats: int, name: str):
     """Benchmark one forward pass, optionally through a KV cache.
 
     Returns the full result so the caller can report device time next to

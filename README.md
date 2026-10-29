@@ -5,6 +5,11 @@ It benchmarks candidate kernels per shape and dtype, checks numerical agreement
 on validation inputs before using them, and records why every decision was made.
 These checks are not a proof for all possible inputs.
 
+Measured on an RTX 3070 Laptop (4-layer decoder, random weights, single run):
+decoder prefill is faster than the best baseline (`torch.compile`), while decode is
+slower than `torch.compile`, a published regression. Numbers and configuration in
+[`docs/RESULTS.md`](docs/RESULTS.md).
+
 [![CI](https://github.com/Farx1/AKO/actions/workflows/ci.yml/badge.svg)](https://github.com/Farx1/AKO/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org)
@@ -185,14 +190,13 @@ kernel's speedup against problem size gives a cloud, not a threshold: it wins by
 
 ### Negative results, published
 
-- **Decode is a regression**: 0.69× against a compiled stack. The selector
+- **Decode is a regression**: 0.65× against a compiled stack. The selector
   benchmarks at decode shapes and still picks Triton, so the per-call benchmark
   disagrees with the loop. `launch_overhead_ms` is now recorded per backend to
   settle it. Unresolved.
-- **`torch.compile` is slower than eager on our stack measurement** (10.75 ms vs
-  10.39 ms in prefill). Cause identified: Dynamo hits `cache_size_limit` on
-  `KVCache.update` and recompiles in a loop, so the compiled baseline is
-  handicapped and the 1.24× prefill figure is optimistic. Not yet fixed.
+- **The prefill win is narrow**: `torch.compile` beats eager in both passes
+  (11.16 ms vs 11.69 ms in prefill, 7.94 ms vs 10.06 ms in decode), and AKO's
+  1.24× prefill figure is against that compiled baseline, from a single run.
 - **End-to-end impact is small.** The operations AKO covers are ~24 % of a decoder
   stack's time. A 1.05× on that share is ~1 % overall. This is a study and a
   harness, not a speedup.
