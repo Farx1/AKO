@@ -179,7 +179,9 @@ def main() -> None:
             stats = compare_paired(
                 vendor, trial, (a, b, bias), pairs=3, warmup=3, repeats=10, flush_l2=flush
             )
-            probe_rows.append({"tile": _tile_dict(candidate), "vs_vendor_probe": stats["speedup_median"]})
+            probe_rows.append(
+                {"tile": _tile_dict(candidate), "vs_vendor_probe": stats["speedup_median"]}
+            )
             print(f"  probe {_tile_dict(candidate)} -> {stats['speedup_median']}x vs {vendor_name}")
             if stats["speedup_median"] > best_probe:
                 best_probe = stats["speedup_median"]
@@ -216,7 +218,7 @@ def main() -> None:
             stats = compare_paired(
                 other,
                 fused,
-                (a, b, bias),
+                (a, b, bias),  # noqa: F821 - bound in the loop, deleted only after the call
                 pairs=args.pairs,
                 warmup=args.warmup,
                 repeats=args.repeats,
