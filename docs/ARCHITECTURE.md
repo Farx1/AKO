@@ -3,9 +3,10 @@
 Status: design document for the next version of AKO. It supersedes nothing that
 runs today; the existing rmsnorm/rope/swiglu dispatch path is untouched by it.
 
-Target hardware for every number in this document: one RTX 3070 (GA104, compute
-capability 8.6, 46 SMs, 8 GB, 448 GB/s, 4 MB L2, 99 KB opt-in shared memory per
-block). No `sudo`, so clocks cannot be locked with `nvidia-smi -lgc`.
+Target hardware for every number in this document: one RTX 3070 Laptop GPU
+(GA104, compute capability 8.6, 40 SMs / 5120 CUDA cores, 8 GB, 448 GB/s, 4 MB L2,
+99 KB opt-in shared memory per block; SM count from
+`reports/rtx3070/environment.json`). No `sudo`, so clocks cannot be locked with `nvidia-smi -lgc`.
 
 **Scope limit, fixed 2026-08-13: that one card is the only card this project will
 ever measure.** No second GPU is rented or borrowed. Every statement about how a
@@ -56,7 +57,9 @@ Written plainly, because pretending otherwise costs months:
 - **"Beat cuBLAS on large square fp16 GEMM."** Computed, not assumed: `tl.dot`
   accumulates in fp32 by default, and GA10x runs fp16 tensor ops at half rate
   with fp32 accumulate — so the ceiling reachable from Triton on this card is
-  5888 × 2 × 1.725 GHz × 2 = **40.6 TFLOP/s**, not the 81.3 on the spec sheet.
+  5120 × 2 × 1.62 GHz × 2 = **33.2 TFLOP/s** (1.62 GHz is the top laptop boost
+  spec; the real clock depends on the laptop's power limit), not the 66.4 that
+  fp16 accumulate would give.
   cuBLAS lands 55–65% of that at 4096³ and a good Triton GEMM lands 85–95% of
   cuBLAS. Target parity there and say so.
 
@@ -105,7 +108,7 @@ cells where AKO's pick beats `torch.compile(mode="max-autotune")` by >10%.**
 
 ### 1.6 Where the winnable region is, computed before writing a kernel
 
-Machine balance: 40.6e12 / 448e9 ≈ **90.6 FLOP/byte**.
+Machine balance: 33.2e12 / 448e9 ≈ **74.1 FLOP/byte**.
 
 | Shape family | Arithmetic intensity | Expectation (hypothesis, to be measured) |
 |---|---|---|
@@ -119,7 +122,9 @@ Two card-specific effects are expected to drive the ranking:
   × itemsize`; `BM=BN=128, BK=64, stages=4` needs 131072 B and cannot run. Over a
   720-point `BLOCK_M × BLOCK_N × BLOCK_K × warps × stages` grid, 441 fit — a 39%
   cut for zero compile cost.
-- **46 SMs (not a power of two).** At M=N=1024, 128×128 tiles give 64 tiles over
+- **46 SMs (not a power of two).** *(Written for the desktop card; the measured
+  laptop card has 40 SMs, where both tilings below give 80 % and this argument
+  needs redoing.)* At M=N=1024, 128×128 tiles give 64 tiles over
   46 SMs = 2 waves at 70% utilization, while 64×128 gives 128 tiles at 93%. The
   **harness self-test is this direction only**: at 1024² the wave model predicts
   64×128 ahead of 128×128, so measuring the opposite ordering means the timing
@@ -265,7 +270,7 @@ ACC_FP16:   bool                            # fp16 accumulate: 2x ceiling on GA1
 ```
 
 `ACC_FP16` is a first-class variant, not a tuning knob. It doubles the
-theoretical ceiling (40.6 → 81.3 TFLOP/s) and buys that with precision, which is
+theoretical ceiling (33.2 → 66.4 TFLOP/s) and buys that with precision, which is
 exactly the trade the correctness gate exists to arbitrate. Its relaxed tolerance
 multiplier is stored **per trial row**, so a reader can see which wins were
 bought with numerics.
