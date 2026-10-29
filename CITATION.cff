@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "AKO: Adaptive Kernel Optimizer"
+abstract: >-
+  A validation harness for swapping GPU kernels in an LLM inference stack:
+  per-shape benchmarking with a dtype-scaled numerical correctness gate.
+type: software
+authors:
+  - family-names: Barth
+    given-names: Jules
+version: 0.2.0
+license: MIT
+repository-code: "https://github.com/Farx1/AKO"
+keywords:
+  - cuda
+  - triton
+  - llm
+  - inference
+  - kernels
+  - autotuning
