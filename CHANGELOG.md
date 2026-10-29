@@ -17,6 +17,15 @@ been published. Install from git.
 
 ### Added
 
+- Quality gates: `pre-commit` (ruff lint and format, codespell, YAML/TOML and
+  whitespace checks), `mypy` on the packages that type-check clean today
+  (`ako/dispatcher`, `ako/validation`, `ako/export`, `ako/experiments`), and a
+  coverage floor of 70 % on the CPU suite.
+- CI pins every action by commit SHA, runs with read-only `contents`
+  permission, and installs the CPU build of PyTorch. Dependabot watches pip and
+  GitHub Actions monthly.
+- `CITATION.cff`, `CONTRIBUTING.md`, `SECURITY.md`.
+
 - `docs/EXTENDING.md`: the public contract for registering a third-party kernel
   — `KernelEntry` / `KernelRegistry` / `KernelSelector` signatures, the calling
   convention of every dispatched operation, a runnable CPU example, what the
@@ -29,6 +38,8 @@ been published. Install from git.
 
 ### Changed
 
+- Tests can import `scripts.*` (`pythonpath = ["."]`): `tests/test_winnable_tile.py`
+  failed to collect in CI, which stopped the whole suite.
 - Build requirement raised to `setuptools>=77` (SPDX `license` / `license-files`
   support); the redundant `wheel` build dependency was dropped.
 
@@ -55,5 +66,6 @@ An honest summary of what exists today, for the first reader of this file.
   Nothing is claimed about other hardware.
 - Triton kernel logic is tested on CPU through Triton's interpreter; performance
   is not, and cannot be, tested without a device.
-- CI runs the non-GPU test suite on Python 3.11 and 3.12 with `compileall` as
-  its only lint. There is no coverage gate, no GPU runner, no publish job.
+- CI runs the non-GPU test suite on Python 3.11 and 3.12 with a coverage
+  floor, ruff, and mypy on part of the package. There is no GPU runner and no
+  publish job.
